@@ -9,7 +9,7 @@ class PostcodesIoClientIntegrationSpec(private val postcodesIoClient: PostcodesI
 
     given("A postcode") {
         `when`("the postcode's location is sought") {
-            val location = postcodesIoClient.findLocationByPostcode("SE27 0LG")
+            val location = postcodesIoClient.findLocationByPostcode("AB12 3CD")
             then("the associated location is returned") {
                 location.latitude shouldBe "51.427195"
                 location.longitude shouldBe "-0.108248"

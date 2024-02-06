@@ -22,7 +22,7 @@ class CheckConfigurationSpec(
 }) {
     companion object {
         const val SCHEDULE_EXPRESSION = "* * * 1 *"
-        const val POSTCODE = "SE27 0LG"
+        const val POSTCODE = "AB12 3CD"
     }
 }
 

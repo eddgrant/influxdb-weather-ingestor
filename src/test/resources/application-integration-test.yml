@@ -30,7 +30,7 @@ logger:
       eddgrant: INFO
 
 checks:
-  postcode: SE27 0LG
+  postcode: AB12 3CD
 
 influxdb:
   #bucket: temperature
