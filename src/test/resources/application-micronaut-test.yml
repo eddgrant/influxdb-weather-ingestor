@@ -1,0 +1,16 @@
+# This environment exists to provide the necessary configuration data such that all beans
+# can be instantiated for use in @MicronautTest tests. Tests may override these values
+# as they require.
+
+checks:
+  postcode: AB12 3CD
+
+influxdb:
+  bucket: temperature
+  org: eddgrant
+  token: my-very-secure-influxdb-token
+  url: http://influxdb:8086?connectTimeout=5S&readTimeout=5S&writeTimeout=5S
+
+meteomatics:
+  username: edd.grant
+  password: my-very-secure-influxdb-token

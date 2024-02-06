@@ -1,0 +1,30 @@
+micronaut:
+  application:
+    name: influxdbWeatherIngestor
+  http:
+    client:
+      connect-timeout: 5s
+      read-timeout: 10s
+      log-level: TRACE
+    services:
+      meteomatics:
+        urls:
+          - "https://api.meteomatics.com"
+      postcodes-io:
+        urls:
+          - "https://api.postcodes.io"
+  default:
+    allocator:
+      max-order: 3
+
+logger:
+  levels:
+    io:
+      micronaut: INFO
+      #http:
+      #  client: TRACE
+      http:
+        client: INFO
+      retry: DEBUG
+    com:
+      eddgrant: INFO
