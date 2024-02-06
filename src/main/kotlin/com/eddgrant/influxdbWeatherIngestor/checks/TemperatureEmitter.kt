@@ -22,7 +22,6 @@ class TemperatureEmitter(
     private val influxDBClient: InfluxDBClientKotlin
 ) {
     suspend fun emitTemperature() {
-        LOGGER.info("I am in emitTemperature()")
         val dateTime = Clock.System.now()
 
         val temperature = weatherService.getTemperatureByDateAndLocation(
@@ -30,18 +29,14 @@ class TemperatureEmitter(
             postcodesIoClient.findLocationByPostcode(checkConfiguration.postcode)
         )
 
-        LOGGER.info("Temperature is: $temperature")
-
         val temperatureMeasurement = Temperature(
             checkConfiguration.postcode,
             temperature,
             dateTime.toJavaInstant()
         )
 
-        LOGGER.info("Point object created")
         influxDBClient.getWriteKotlinApi().writeMeasurement(temperatureMeasurement, WritePrecision.MS)
 
-        // TODO: Find out why we're never getting to this line... Is it a timeout? Something else?
         LOGGER.info("Temperature measurement sent: Postcode: ${checkConfiguration.postcode}, Temperature: $temperature")
     }
 
