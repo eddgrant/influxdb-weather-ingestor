@@ -30,11 +30,7 @@ logger:
       eddgrant: INFO
 
 checks:
-  postcode: AB12 3CD
+  postcode: SO30 4LA
 
 influxdb:
-  #bucket: temperature
-  #org: eddgrant
   logLevel: BODY
-  #token: my-very-secure-influxdb-token
-  #url: http://influxdb:8086?connectTimeout=5S&readTimeout=5S&writeTimeout=5S
