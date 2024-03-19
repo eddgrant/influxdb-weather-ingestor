@@ -24,9 +24,18 @@ class TemperatureEmitter(
     suspend fun emitTemperature() {
         val dateTime = Clock.System.now()
 
+        LOGGER.debug("About to get the temperature...")
+        val getLocationHttpResponse = postcodesIoClient.findLocationByPostcode(checkConfiguration.postcode)
+        if(getLocationHttpResponse.status != HttpStatus.OK) {
+            LOGGER.error("Could not determine location from postcode '{}'. Is it a valid postcode?", checkConfiguration.postcode)
+            return
+        }
+
+        val location = getLocationHttpResponse.body()!!
+        LOGGER.debug("Location is {}", getLocationHttpResponse)
         val temperature = weatherService.getTemperatureByDateAndLocation(
             dateTime,
-            postcodesIoClient.findLocationByPostcode(checkConfiguration.postcode)
+            location
         )
 
         val temperatureMeasurement = Temperature(
