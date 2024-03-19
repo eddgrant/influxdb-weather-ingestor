@@ -4,7 +4,7 @@ import com.influxdb.annotations.Column
 import com.influxdb.annotations.Measurement
 import java.time.Instant
 
-@Measurement(name = "temperature")
+@Measurement(name = "Temperature")
 data class Temperature(
     @Column(tag = true) val postcode: String,
     @Column val value: Double,
