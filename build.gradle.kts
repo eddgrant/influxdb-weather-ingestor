@@ -140,6 +140,7 @@ tasks.named<DockerBuildImage>("dockerBuild") {
     images.add("${dockerRegistryHost}/eddgrant/${project.name}:${project.version}")
     images.add("${dockerRegistryHost}/eddgrant/${project.name}:latest")
     images.add("${dockerRegistryHost}/eddgrant/${project.name}:local")
+    mustRunAfter(tasks.withType(Test::class.java))
 }
 
 tasks.named<DockerPushImage>("dockerPush") {
