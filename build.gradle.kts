@@ -1,5 +1,6 @@
 import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
+import io.micronaut.gradle.docker.MicronautDockerfile
 
 plugins {
     id("org.jetbrains.kotlin.jvm") version "1.9.23"
@@ -114,6 +115,10 @@ tasks.named<Test>("test") {
     ignoreFailures = true
 }
 
+tasks.named<MicronautDockerfile>("dockerfile") {
+    baseImage.set("eclipse-temurin:${org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21.target}-jre")
+}
+
 val integrationTestTask = tasks.register<Test>("integrationTest") {
     description = "Runs integration tests."
     group = "verification"
@@ -132,6 +137,7 @@ tasks.named<DockerBuildImage>("dockerBuild") {
     imageId.set("eddgrant/${project.name}")
     images.add("${dockerRegistryHost}/eddgrant/${project.name}:${project.version}")
     images.add("${dockerRegistryHost}/eddgrant/${project.name}:latest")
+    images.add("${dockerRegistryHost}/eddgrant/${project.name}:local")
 }
 
 tasks.named<DockerPushImage>("dockerPush") {
