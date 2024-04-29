@@ -2,30 +2,23 @@
 
 A simple utility which obtains temperature data, based on UK postcode, and sends it to an InfluxDB endpoint.
 
-# Run the tests
+# How to use it
 
-Tests are separated in to 2 suites:
+## Sign up for a Meteomatics account
 
-1. Unit tests.
-2. Integration tests.
+`influxdb-weather-ingestor` sources its temperature data from Meteomatics. 
 
-## Run the unit tests
+Meteomatics offer free basic accounts which can be used. [Sign up](https://www.meteomatics.com/en/sign-up-weather-api-free-basic-account/) for a free basic Meteomatics account.
 
-```shell
-./gradlew test
-```
+Make a note of your Meteomatics username and password. You will need them later.
 
-## Run the integration tests
+## Run InfluxDB locally
 
-### Create a Docker Network
+An InfluxDB endpoint is required to collect temperature data. You might have an InfluxDB setup already, but if not one can be easily created by running the following commands:
 
 ```shell
 docker network create -d bridge influxdb-weather-ingestor
 ```
-
-### Run InfluxDB locally
-
-The integration tests require an InfluxDB endpoint, which can be created by running the following command:
 
 ```shell
 docker run --rm \
@@ -34,40 +27,17 @@ docker run --rm \
   -e DOCKER_INFLUXDB_INIT_MODE="setup" \
   -e DOCKER_INFLUXDB_INIT_USERNAME="my-very-secure-influxdb-username" \
   -e DOCKER_INFLUXDB_INIT_PASSWORD="my-very-secure-influxdb-password" \
-  -e DOCKER_INFLUXDB_INIT_ORG="eddgrant" \
-  -e DOCKER_INFLUXDB_INIT_BUCKET="temperature" \
+  -e DOCKER_INFLUXDB_INIT_ORG="my-influxdb-org" \
+  -e DOCKER_INFLUXDB_INIT_BUCKET="weather" \
   -e DOCKER_INFLUXDB_INIT_RETENTION="1w" \
   -e DOCKER_INFLUXDB_INIT_ADMIN_TOKEN="my-very-secure-influxdb-token" \
   --name influxdb \
   influxdb:2.0
 ```
 
-### Run the integration test suite
+## Run influxdb-weather-ingestor
 
-Integration tests are situated within files which match the `*Integration*` naming pattern e.g. `MeteomaticsClientIntegrationSpec.kt`
-
-Due to their nature, integration tests require access to the Meteomatics API, via a real Meteomatics account.
-
-The Meteomatics API credentials are provided by setting the following Micronaut properties:
-
-| Property Name          | Property Value                                            | Notes                                                                                               |
-|------------------------|-----------------------------------------------------------|-----------------------------------------------------------------------------------------------------|
-| `meteomatics.username` | A valid username for the meteomatics API                  | Sign up for an account here: https://www.meteomatics.com/en/sign-up-weather-api-free-basic-account/ |
-| `meteomatics.password` | The password associated with the meteomatics API username |                                                                                                     |
-
-```shell
-METEOMATICS_USERNAME="my-meteomatics-api-username" \
-  METEOMATICS_PASSWORD="my-meteomatics-api-password" \
-  INFLUXDB_ORG="my-influxdb-org" \
-  INFLUXDB_BUCKET="temperature" \
-  INFLUXDB_TOKEN="my-very-secure-influxdb-token" \
-  INFLUXDB_URL="http://influxdb:8086?connectTimeout=5S&readTimeout=5S&writeTimeout=5S" \
-  ./gradlew clean integrationTest
-```
-
-# Run influxdb-weather-ingestor
-
-To run the infludb-weather-ingestor Docker image run the following command, being sure to provide meaningful values for the environment variables: 
+To run the influxdb-weather-ingestor Docker image run the following command:
 
 ```shell
 docker run --rm \
@@ -76,27 +46,48 @@ docker run --rm \
   --env METEOMATICS_USERNAME="my-meteomatics-api-username" \
   --env METEOMATICS_PASSWORD="my-meteomatics-api-password" \
   --env INFLUXDB_ORG="my-influxdb-org" \
-  --env INFLUXDB_BUCKET="temperature" \
+  --env INFLUXDB_BUCKET="weather" \
   --env INFLUXDB_TOKEN="my-very-secure-influxdb-token" \
   --env INFLUXDB_URL="http://influxdb:8086?connectTimeout=5S&readTimeout=5S&writeTimeout=5S" \
-  influxdb-weather-ingestor:latest
+  eddgrant/influxdb-weather-ingestor:latest
 ```
+
+Ensure that the InfluxDB variables match the ones used when setting up InfluxDB.
+
+Ensure that you set a valid UK postcode for the `CHECKS_POSTCODE` environment variable.
+
+Ensure that you set your Meteomatics username and password for the `METEOMATICS_USERNAME` and `METEOMATICS_PASSWORD` environment variables.
+
+## Check the logs
+
+influxdb-weather-ingestor should start and begin to log its output to the console:
+
+```
+ __  __ _                                  _   
+|  \/  (_) ___ _ __ ___  _ __   __ _ _   _| |_ 
+| |\/| | |/ __| '__/ _ \| '_ \ / _` | | | | __|
+| |  | | | (__| | | (_) | | | | (_| | |_| | |_ 
+|_|  |_|_|\___|_|  \___/|_| |_|\__,_|\__,_|\__|
+18:09:08.145 [main] INFO  i.m.l.PropertiesLoggingLevelsConfigurer - Setting log level 'INFO' for logger: 'io.http.client'
+18:09:08.147 [main] INFO  i.m.l.PropertiesLoggingLevelsConfigurer - Setting log level 'DEBUG' for logger: 'io.retry'
+18:09:08.147 [main] INFO  i.m.l.PropertiesLoggingLevelsConfigurer - Setting log level 'INFO' for logger: 'com.eddgrant'
+18:09:08.147 [main] INFO  i.m.l.PropertiesLoggingLevelsConfigurer - Setting log level 'INFO' for logger: 'io.micronaut'
+18:09:08.556 [main] INFO  c.e.i.checks.RegisterChecksAction - Temperature checks scheduled to run on schedule: * * * * *
+18:09:08.560 [main] INFO  io.micronaut.runtime.Micronaut - Startup completed in 606ms. Server Running: http://4294397d97fa:8080
+```
+
+By default influxdb-weather-ingestor will check the temperature every minute. 
+
+This can be altered by setting the `CHECKS_SCHEDULE_EXPRESSION` environment variable e.g.
 
 ```shell
-docker run --rm \
-  --net=influxdb-weather-ingestor \
-  eddgrant/influxdb-weather-ingestor:0.1
-```
+CHECKS_SCHEDULE_EXPRESSION=*/10 * * * *`
+````
 
-# Pushing images
-
-Docker images are built and managed by the [gradle-docker-plugin][gradle-docker-plugin], which sources its authentication details in `$HOME/.docker/config.json` by default.
-
-To login and have Docker save the credentials in the above file do the following:
+Each time a temperature measurement is sent to InfluxDB an `INFO` level log entry is written e.g.
 
 ```shell
-docker login --username eddgrant \
-  registry.hub.docker.com/library/eddgrant/influxdb-weather-ingestor
+17:23:01.780 [scheduled-executor-thread-1] INFO  c.e.i.checks.TemperatureEmitter - Temperature measurement sent: Postcode: AB12 3CD, Temperature: 13.6
 ```
 
-[gradle-docker-plugin]: https://github.com/bmuschko/gradle-docker-plugin
+Development related information can be found in [docs/development.md](docs/development.md)
