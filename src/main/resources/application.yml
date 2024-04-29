@@ -21,8 +21,8 @@ logger:
   levels:
     io:
       micronaut: INFO
-      #http:
-      #  client: TRACE
+        #http:
+        #  client: TRACE
       http:
         client: INFO
       retry: DEBUG

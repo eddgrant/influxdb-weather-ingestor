@@ -5,13 +5,23 @@ import io.micronaut.context.event.ApplicationEventListener
 import io.micronaut.runtime.Micronaut.run
 import io.micronaut.runtime.server.event.ServerStartupEvent
 import jakarta.inject.Singleton
+import org.slf4j.LoggerFactory
 
 @Singleton
 class InfluxDBWeatherIngestor(
 	private val registerChecksAction: RegisterChecksAction
 ) : ApplicationEventListener<ServerStartupEvent> {
 	override fun onApplicationEvent(event: ServerStartupEvent?) {
-		registerChecksAction.register()
+		try {
+			registerChecksAction.register()
+		}
+		catch (interruptedException: InterruptedException) {
+			LOGGER.error(interruptedException.message)
+		}
+	}
+
+	companion object {
+		private val LOGGER = LoggerFactory.getLogger(InfluxDBWeatherIngestor::class.java)
 	}
 }
 

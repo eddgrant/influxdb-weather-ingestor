@@ -5,7 +5,10 @@ import com.eddgrant.influxdbWeatherIngestor.persistence.influxdb.Temperature
 import com.eddgrant.influxdbWeatherIngestor.weather.WeatherService
 import com.influxdb.client.domain.WritePrecision
 import com.influxdb.client.kotlin.InfluxDBClientKotlin
+import io.micronaut.http.HttpStatus
 import jakarta.inject.Singleton
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Clock
 import kotlinx.datetime.toJavaInstant
 import org.slf4j.LoggerFactory
@@ -21,10 +24,9 @@ class TemperatureEmitter(
     private val weatherService: WeatherService,
     private val influxDBClient: InfluxDBClientKotlin
 ) {
-    suspend fun emitTemperature() {
+    fun emitTemperature() {
         val dateTime = Clock.System.now()
 
-        LOGGER.debug("About to get the temperature...")
         val getLocationHttpResponse = postcodesIoClient.findLocationByPostcode(checkConfiguration.postcode)
         if(getLocationHttpResponse.status != HttpStatus.OK) {
             LOGGER.error("Could not determine location from postcode '{}'. Is it a valid postcode?", checkConfiguration.postcode)
@@ -32,7 +34,6 @@ class TemperatureEmitter(
         }
 
         val location = getLocationHttpResponse.body()!!
-        LOGGER.debug("Location is {}", getLocationHttpResponse)
         val temperature = weatherService.getTemperatureByDateAndLocation(
             dateTime,
             location
@@ -44,9 +45,22 @@ class TemperatureEmitter(
             dateTime.toJavaInstant()
         )
 
-        influxDBClient.getWriteKotlinApi().writeMeasurement(temperatureMeasurement, WritePrecision.MS)
-
-        LOGGER.info("Temperature measurement sent: Postcode: ${checkConfiguration.postcode}, Temperature: $temperature")
+        runBlocking {
+            val job = launch {
+                try {
+                    influxDBClient.getWriteKotlinApi().writeMeasurement(temperatureMeasurement, WritePrecision.MS)
+                } catch (e: Exception) {
+                    LOGGER.error(e.message)
+                    /*
+                     * Propagate the exception back to the caller (who is outside the coroutine scope)
+                     * so they can decide what they want to do.
+                     */
+                    throw e
+                }
+            }
+            job.join()
+            LOGGER.info("Temperature measurement sent: Postcode: ${checkConfiguration.postcode}, Temperature: $temperature")
+        }
     }
 
     companion object {

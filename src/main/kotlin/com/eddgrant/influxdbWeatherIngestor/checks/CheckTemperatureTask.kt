@@ -1,6 +1,6 @@
 package com.eddgrant.influxdbWeatherIngestor.checks
 
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.Runnable
 import org.slf4j.LoggerFactory
 
 //@RequiresCheckConfiguration
@@ -9,9 +9,7 @@ class CheckTemperatureTask(
 ) : Runnable {
     override fun run() {
         LOGGER.info("Checking the temperature")
-        runBlocking {
-            temperatureEmitter.emitTemperature()
-        }
+        temperatureEmitter.emitTemperature()
     }
 
     companion object {
