@@ -2,12 +2,12 @@ import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
 
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "1.9.22"
-    id("org.jetbrains.kotlin.plugin.allopen") version "1.9.22"
-    id("com.google.devtools.ksp") version "1.9.22-1.0.17"
+    id("org.jetbrains.kotlin.jvm") version "1.9.23"
+    id("org.jetbrains.kotlin.plugin.allopen") version "1.9.23"
+    id("com.google.devtools.ksp") version "1.9.23-1.0.19"
     id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("io.micronaut.application") version "4.2.1"
-    id("io.micronaut.aot") version "4.2.1"
+    id("io.micronaut.application") version "4.3.4"
+    id("io.micronaut.aot") version "4.3.4"
     id("com.bmuschko.docker-remote-api") version "9.4.0" // apply false
 }
 
@@ -45,7 +45,7 @@ dependencies {
     implementation("io.micronaut.serde:micronaut-serde-jackson")
 
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
-    implementation("com.influxdb:influxdb-client-kotlin:6.10.0")
+    implementation("com.influxdb:influxdb-client-kotlin:7.0.0")
 
     annotationProcessor("io.micronaut.validation:micronaut-validation-processor")
     implementation("io.micronaut.validation:micronaut-validation")
@@ -72,7 +72,6 @@ tasks {
     }
 }
 
-graalvmNative.toolchainDetection.set(false)
 
 /**
  * Important: Mocking of non-interface beans is currently broken and undocumented
@@ -83,6 +82,7 @@ allOpen {
     annotations("jakarta.inject.Singleton")
 }
 
+graalvmNative.toolchainDetection.set(true)
 micronaut {
     version("$micronautVersion")
     runtime("netty") //TODO: If we remove this will it remove the HTTP server?
