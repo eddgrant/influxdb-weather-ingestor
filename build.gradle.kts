@@ -113,6 +113,8 @@ tasks.named<Test>("test") {
         excludeTestsMatching("*Integration*")
     }
     ignoreFailures = true
+    // https://github.com/mockk/mockk/issues/681
+    jvmArgs("--add-opens", "java.base/java.time=ALL-UNNAMED")
 }
 
 tasks.named<MicronautDockerfile>("dockerfile") {
