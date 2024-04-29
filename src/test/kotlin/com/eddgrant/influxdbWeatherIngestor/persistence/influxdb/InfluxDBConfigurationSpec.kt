@@ -5,9 +5,9 @@ import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
 import io.micronaut.context.annotation.Property
 import io.micronaut.test.extensions.kotest5.annotation.MicronautTest
-import java.net.URL
+import java.net.URI
 
-@MicronautTest(environments = ["micronaut-test"])
+@MicronautTest
 @Property(name="influxdb.bucket", value=InfluxDBConfigurationSpec.BUCKET)
 @Property(name="influxdb.org", value=InfluxDBConfigurationSpec.ORG)
 @Property(name="influxdb.log-level", value=InfluxDBConfigurationSpec.LOG_LEVEL)
@@ -34,7 +34,7 @@ class InfluxDBConfigurationSpec(
     }
 
     should("set the url") {
-        influxDBConfiguration.url shouldBe URL(URL)
+        influxDBConfiguration.url shouldBe URI(URL).toURL()
     }
 
 }) {
@@ -47,7 +47,7 @@ class InfluxDBConfigurationSpec(
     }
 }
 
-@MicronautTest(environments = ["micronaut-test"])
+@MicronautTest
 @Property(name="influxdb.bucket", value=InfluxDBConfigurationSpec.BUCKET)
 @Property(name="influxdb.org", value=InfluxDBConfigurationSpec.ORG)
 @Property(name="influxdb.token", value=InfluxDBConfigurationSpec.TOKEN)

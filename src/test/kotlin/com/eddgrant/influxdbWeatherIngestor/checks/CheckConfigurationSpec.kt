@@ -5,7 +5,7 @@ import io.kotest.matchers.shouldBe
 import io.micronaut.context.annotation.Property
 import io.micronaut.test.extensions.kotest5.annotation.MicronautTest
 
-@MicronautTest(environments = ["micronaut-test"])
+@MicronautTest
 @Property(name="checks.schedule-expression", value= CheckConfigurationSpec.SCHEDULE_EXPRESSION)
 @Property(name="checks.postcode", value= CheckConfigurationSpec.POSTCODE)
 class CheckConfigurationSpec(
@@ -26,7 +26,7 @@ class CheckConfigurationSpec(
     }
 }
 
-@MicronautTest(environments = ["micronaut-test"])
+@MicronautTest
 @Property(name="checks.postcode", value= CheckConfigurationSpec.POSTCODE)
 class CheckConfigurationDefaultsSpec(
     private val checkConfiguration: CheckConfiguration

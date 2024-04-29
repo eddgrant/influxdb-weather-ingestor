@@ -15,7 +15,7 @@ import kotlinx.datetime.Clock
 val location = Location("my-lat", "my-long")
 val now = Clock.System.now()
 
-@MicronautTest(environments = ["micronaut-test"])
+@MicronautTest
 @MockKExtension.ConfirmVerification
 class WeatherServiceSpec(
     private val underTest: WeatherService
