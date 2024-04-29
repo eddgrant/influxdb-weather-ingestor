@@ -3,4 +3,4 @@ defaultPackage: com.eddgrant
 testFramework: kotest
 sourceLanguage: kotlin
 buildTool: gradle_kotlin
-features: [annotation-api, app-name, gradle, http-client, jackson-databind, kotest, kotlin, kotlin-application, kotlin-build, logback, micronaut-build, netty-server, readme, shade, yaml]
+features: [annotation-api, app-name, graalvm, gradle, http-client, jackson-databind, kotest, kotlin, kotlin-application, kotlin-build, logback, micronaut-build, netty-server, readme, shade, yaml]
