@@ -73,6 +73,16 @@ tasks {
 }
 
 graalvmNative.toolchainDetection.set(false)
+
+/**
+ * Important: Mocking of non-interface beans is currently broken and undocumented
+ * in Micronaut and requires this configuration in order to work.
+ * https://github.com/micronaut-projects/micronaut-core/issues/3972
+ */
+allOpen {
+    annotations("jakarta.inject.Singleton")
+}
+
 micronaut {
     version("$micronautVersion")
     runtime("netty") //TODO: If we remove this will it remove the HTTP server?
