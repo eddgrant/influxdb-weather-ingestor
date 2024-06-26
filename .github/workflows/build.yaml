@@ -1,4 +1,4 @@
-name: Build
+name: Build and Publish the Docker image to Dockerhub.
 
 on:
   push:
@@ -9,12 +9,24 @@ jobs:
     steps:
       - name: Checkout sources
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Checkout history and tags for semantic version calculation
+
+      - name: Determine semantic version
+        id: semver
+        uses: paulhatch/semantic-version@v5.3.0
+
+      - name: Output semantic version
+        run: echo "Version is $(steps.semver.outputs.version)"
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: 21
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
+
       - name: Build with Gradle
         run: ./gradlew test dockerBuild
