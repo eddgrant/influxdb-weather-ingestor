@@ -12,7 +12,6 @@ plugins {
     id("com.bmuschko.docker-remote-api") version "9.4.0" // apply false
 }
 
-version = "0.1"
 group = "com.eddgrant"
 
 val micronautVersion by properties
