@@ -23,7 +23,7 @@ jobs:
           java-version: 21
 
       - name: Login to Docker Hub
-        run:  echo ${{ secrets.DOCKER_HUB_PASSWORD }} | docker login --username ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
+        run:  echo ${{ secrets.DOCKER_HUB_PASSWORD }} | docker login --username ${{ secrets.DOCKER_HUB_USERNAME }} registry.hub.docker.com/library/eddgrant/influxdb-weather-ingestor
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
