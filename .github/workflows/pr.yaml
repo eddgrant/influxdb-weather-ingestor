@@ -6,5 +6,7 @@ on:
 jobs:
   pr-build:
     uses: ./.github/workflows/build-and-deploy.yaml
+    permissions:
+      contents: write
     with:
       gradle_tasks: test dockerPushVersion --stacktrace --warning-mode all

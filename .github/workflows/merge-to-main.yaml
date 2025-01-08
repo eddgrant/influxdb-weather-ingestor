@@ -8,5 +8,7 @@ on:
 jobs:
   main-build:
     uses: ./.github/workflows/build-and-deploy.yaml
+    permissions:
+      contents: write
     with:
       gradle_tasks: test dockerPushVersion dockerPushLatest --stacktrace --warning-mode all
