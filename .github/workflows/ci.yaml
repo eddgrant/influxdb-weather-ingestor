@@ -50,7 +50,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Build with Gradle
-        run: ./gradlew -Pversion="${{ steps.semver.outputs.version }}" test dockerPush
+        run: ./gradlew -Pversion="${{ steps.semver.outputs.version }}" test dockerPush --stacktrace --warning-mode all
 
       - name: Push tag to repository
         run: |
