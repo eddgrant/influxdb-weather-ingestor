@@ -13,6 +13,9 @@ on:
       docker_hub_password:
         required: true
 
+env:
+  version_format: ${{ github.event_name == 'pull_request' && format('${major}.${minor}.${patch}-pr{}', env.GITHUB_SHA) || '${major}.${minor}.${patch}' }}
+
 concurrency:
   # Limit to a single concurrent invocation to ensure tagging works correctly.
   group: influxdb-weather-ingestor
@@ -24,6 +27,8 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     steps:
+      - name: Echo version_format
+        run: echo Version format is $version_format
       # Try updating to latest version of Docker to resolve 'Could not push image: missing content-length header for request:' issue.
       # https://forums.docker.com/t/unexpected-missing-content-length-header-for-request/145907/12
       - name: Check Docker Version
