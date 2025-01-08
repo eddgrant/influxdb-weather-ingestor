@@ -14,7 +14,7 @@ on:
         required: true
 
 env:
-  version_format: ${{ github.event_name == 'pull_request' && format('${major}.${minor}.${patch}-pr{}', github.sha) || '${major}.${minor}.${patch}' }}
+  version_format: "${{ github.event_name == 'pull_request' && format('${{major}}.${{minor}}.${{patch}}-pr-{0}', github.sha ) || '${major}.${minor}.${patch}' }}"
 
 concurrency:
   # Limit to a single concurrent invocation to ensure tagging works correctly.
@@ -27,8 +27,9 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     steps:
-      - name: Echo version_format
+      - name: Echo version format
         run: echo Version format is $version_format
+
       # Try updating to latest version of Docker to resolve 'Could not push image: missing content-length header for request:' issue.
       # https://forums.docker.com/t/unexpected-missing-content-length-header-for-request/145907/12
       - name: Check Docker Version
@@ -52,6 +53,8 @@ jobs:
       - name: Determine semantic version
         id: semver
         uses: paulhatch/semantic-version@v5.4.0
+        with:
+          version_format: ${{ env.version_format }}
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -68,7 +71,14 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew -Pversion="${{ steps.semver.outputs.version }}" ${{ inputs.gradle_tasks }}
 
+      - name: Set tag value
+        id: tag-value
+        run: echo "TAG_VALUE=${{ github.event_name == 'pull_request' && steps.semver.outputs.version || steps.semver.outputs.version_tag }}" >> "$GITHUB_OUTPUT"
+
+      - name: Echo tag value
+        run: echo Tag value is ${{ steps.tag-value.outputs.TAG_VALUE }}
+
       - name: Push tag to repository
         run: |
-          git tag ${{ steps.semver.outputs.version_tag }}
-          git push origin ${{ steps.semver.outputs.version_tag }}
+          git tag ${{ steps.tag-value.outputs.TAG_VALUE }}
+          git push origin ${{ steps.tag-value.outputs.TAG_VALUE }}
