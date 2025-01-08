@@ -5,6 +5,7 @@ on:
 
 jobs:
   build:
+    permissions: write-all
     runs-on: ubuntu-latest
     steps:
       # Try updating to latest version of Docker to resolve 'Could not push image: missing content-length header for request:' issue.
@@ -43,10 +44,10 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Build with Gradle
-        run: ./gradlew -Pversion="${{ steps.semver.outputs.version }}" test dockerPush
+      #- name: Build with Gradle
+      #  run: ./gradlew -Pversion="${{ steps.semver.outputs.version }}" test dockerPush
 
-      # - name: Push tag to repository
-      #   run: |
-      #       git tag ${{ steps.semver.outputs.version_tag }}
-      #       git push origin ${{ steps.semver.outputs.version_tag }}
+      - name: Push tag to repository
+        run: |
+            git tag ${{ steps.semver.outputs.version_tag }}
+            git push origin ${{ steps.semver.outputs.version_tag }}
