@@ -1,0 +1,12 @@
+name: Commit to main build and release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  main-build:
+    uses: ./.github/workflows/build-and-deploy.yaml
+    with:
+      gradle_tasks: test dockerPushVersion dockerPushLatest --stacktrace --warning-mode all

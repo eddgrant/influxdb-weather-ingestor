@@ -142,12 +142,21 @@ tasks.named<DockerBuildImage>("dockerBuild") {
     mustRunAfter(tasks.withType(Test::class.java))
 }
 
-tasks.named<DockerPushImage>("dockerPush") {
+tasks.named<DockerPushImage>("dockerPushVersion") {
     images.set(listOf(
         "${dockerRegistryHost}/eddgrant/${project.name}:${project.version}",
-        "${dockerRegistryHost}/eddgrant/${project.name}:latest"
     ))
 }
+
+tasks.register<DockerPushImage>("dockerPushLatest") {
+    images.set(listOf(
+        "${dockerRegistryHost}/eddgrant/${project.name}:latest",
+    ))
+}
+
+/*tasks.register<DockerTagImage>("tagPR") {
+    tag.set("${dockerRegistryHost}/eddgrant/${project.name}:${project.pr}")
+}*/
 
 /*tasks.named<DockerBuildImage>("dockerBuildNative") {
     images.add("eddgrant/${project.name}-native:$project.version")
