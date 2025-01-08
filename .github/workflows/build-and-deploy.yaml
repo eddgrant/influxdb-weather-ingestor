@@ -14,7 +14,7 @@ on:
         required: true
 
 env:
-  version_format: ${{ github.event_name == 'pull_request' && format('${major}.${minor}.${patch}-pr{}', env.GITHUB_SHA) || '${major}.${minor}.${patch}' }}
+  version_format: ${{ github.event_name == 'pull_request' && format('${major}.${minor}.${patch}-pr{}', github.sha) || '${major}.${minor}.${patch}' }}
 
 concurrency:
   # Limit to a single concurrent invocation to ensure tagging works correctly.
