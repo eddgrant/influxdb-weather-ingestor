@@ -142,13 +142,15 @@ tasks.named<DockerBuildImage>("dockerBuild") {
     mustRunAfter(tasks.withType(Test::class.java))
 }
 
-tasks.named<DockerPushImage>("dockerPushVersion") {
+tasks.register<DockerPushImage>("dockerPushVersion") {
+    dependsOn("dockerBuild")
     images.set(listOf(
         "${dockerRegistryHost}/eddgrant/${project.name}:${project.version}",
     ))
 }
 
 tasks.register<DockerPushImage>("dockerPushLatest") {
+    dependsOn("dockerBuild")
     images.set(listOf(
         "${dockerRegistryHost}/eddgrant/${project.name}:latest",
     ))
