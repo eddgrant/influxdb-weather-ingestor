@@ -1,11 +1,16 @@
 name: Build and Publish the Docker image to Dockerhub.
 
 on:
-  push:
+  workflow_call:
+    inputs:
+      gradle_tasks:
+        type: string
+        description: The Gradle tasks to execute
+        required: true
 
 concurrency:
   # Limit to a single concurrent invocation to ensure tagging works correctly.
-  group: ${{ github.workflow }}
+  group: influxdb-weather-ingestor
 
 jobs:
   build:
@@ -50,9 +55,9 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Build with Gradle
-        run: ./gradlew -Pversion="${{ steps.semver.outputs.version }}" test dockerPush --stacktrace --warning-mode all
+        run: ./gradlew -Pversion="${{ steps.semver.outputs.version }}" ${{ inputs.message }}
 
       - name: Push tag to repository
         run: |
-            git tag ${{ steps.semver.outputs.version_tag }}
-            git push origin ${{ steps.semver.outputs.version_tag }}
+          git tag ${{ steps.semver.outputs.version_tag }}
+          git push origin ${{ steps.semver.outputs.version_tag }}
