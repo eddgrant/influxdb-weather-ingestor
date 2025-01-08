@@ -60,7 +60,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Build with Gradle
-        run: ./gradlew -Pversion="${{ steps.semver.outputs.version }}" ${{ inputs.message }}
+        run: ./gradlew -Pversion="${{ steps.semver.outputs.version }}" ${{ inputs.gradle_tasks }}
 
       - name: Push tag to repository
         run: |
