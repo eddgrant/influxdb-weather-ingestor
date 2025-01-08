@@ -16,6 +16,7 @@ on:
 concurrency:
   # Limit to a single concurrent invocation to ensure tagging works correctly.
   group: influxdb-weather-ingestor
+  cancel-in-progress: false
 
 jobs:
   build:
