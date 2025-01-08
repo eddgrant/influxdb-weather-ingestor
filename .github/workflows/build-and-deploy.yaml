@@ -83,5 +83,5 @@ jobs:
 
       - name: Push tag to repository
         run: |
-          git tag ${{ steps.tag-value.outputs.TAG_VALUE }}
+          git tag -a ${{ steps.tag-value.outputs.TAG_VALUE }} ${{ github.sha }}
           git push origin ${{ steps.tag-value.outputs.TAG_VALUE }}
