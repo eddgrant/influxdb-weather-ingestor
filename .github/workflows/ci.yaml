@@ -30,3 +30,8 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew -Pversion="${{ steps.semver.outputs.version }}" test dockerPush
+
+      - name: Push tag to repository
+        run: |
+            git tag ${{ steps.semver.outputs.version_tag }}
+            git push origin ${{ steps.semver.outputs.version_tag }}
