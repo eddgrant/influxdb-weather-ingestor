@@ -3,6 +3,10 @@ name: Build and Publish the Docker image to Dockerhub.
 on:
   push:
 
+concurrency:
+  # Limit to a single concurrent invocation to ensure tagging works correctly.
+  group: ${{ github.workflow }}
+
 jobs:
   build:
     permissions:
