@@ -56,6 +56,9 @@ jobs:
         with:
           version_format: ${{ env.version_format }}
 
+      - name: Output semver debug information
+        run: "echo SEMVER debug info: ${{ steps.semver.outputs.debug_output }}"
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
