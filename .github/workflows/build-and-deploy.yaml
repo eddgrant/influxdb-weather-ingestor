@@ -18,6 +18,9 @@ concurrency:
   group: influxdb-weather-ingestor
   cancel-in-progress: false
 
+env:
+  prerelease_mode_enabled: "${{ github.event_name == 'pull_request' && true || false }}"
+
 jobs:
   build:
     permissions:
@@ -50,6 +53,7 @@ jobs:
         uses: paulhatch/semantic-version@v5.4.0
         with:
           bump_each_commit: true
+          enable_prerelease_mode: ${{ version_format }}
 
       - name: Output semver debug information
         run: "echo SEMVER debug info: ${{ steps.semver.outputs.debug_output }}"
