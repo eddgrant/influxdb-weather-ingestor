@@ -13,9 +13,6 @@ on:
       docker_hub_password:
         required: true
 
-env:
-  version_format: "${{ github.event_name == 'pull_request' && format('${{major}}.${{minor}}.${{patch}}-pr-{0}', github.sha ) || '${major}.${minor}.${patch}' }}"
-
 concurrency:
   # Limit to a single concurrent invocation to ensure tagging works correctly.
   group: influxdb-weather-ingestor
@@ -27,23 +24,21 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     steps:
-      - name: Echo version format
-        run: echo Version format is $version_format
-
       # Try updating to latest version of Docker to resolve 'Could not push image: missing content-length header for request:' issue.
       # https://forums.docker.com/t/unexpected-missing-content-length-header-for-request/145907/12
-      #- name: Check Docker Version
-      #  run: docker --version
+      - name: Check Docker Version
+        run: docker --version
 
-      #- name: Install Latest Docker
-      #  run: |
-      #    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-      #    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu  $(lsb_release -cs)  stable"
-      #    sudo apt-get update
-      #    sudo apt-get install docker-ce
+      - name: Install Latest Docker
+        run: |
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+          sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu  $(lsb_release -cs)  stable"
+          sudo apt-get update
+          sudo apt-get install docker-ce
+          sudo systemctl restart docker
 
-      #- name: Check Docker Version
-      #  run: docker --version
+      - name: Check Docker Version
+        run: docker --version
 
       - name: Checkout sources
         uses: actions/checkout@v4
@@ -54,9 +49,7 @@ jobs:
         id: semver
         uses: paulhatch/semantic-version@v5.4.0
         with:
-          #version_format: ${{ env.version_format }}
           bump_each_commit: true
-          #bump_each_commit_patch_pattern: "(PATCH)"
 
       - name: Output semver debug information
         run: "echo SEMVER debug info: ${{ steps.semver.outputs.debug_output }}"
@@ -70,35 +63,13 @@ jobs:
       - name: Login to Docker Hub
         run:  echo ${{ secrets.docker_hub_password }} | docker login --username ${{ secrets.docker_hub_username }} --password-stdin registry.hub.docker.com/library/eddgrant/influxdb-weather-ingestor
 
-      #- name: Setup Gradle
-      #  uses: gradle/actions/setup-gradle@v4
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
 
-      #- name: Build with Gradle
-      #  run: ./gradlew -Pversion="${{ steps.semver.outputs.version }}" ${{ inputs.gradle_tasks }}
-
-      #- name: Set tag value
-      #  id: tag-value
-      #  run: echo "TAG_VALUE=${{ github.event_name == 'pull_request' && steps.semver.outputs.version || steps.semver.outputs.version_tag }}" >> "$GITHUB_OUTPUT"
-
-      #- name: Echo tag value
-      #  run: echo Tag value is ${{ steps.tag-value.outputs.TAG_VALUE }}
+      - name: Build with Gradle
+        run: ./gradlew -Pversion="${{ steps.semver.outputs.version }}" ${{ inputs.gradle_tasks }}
 
       - name: Push tag to repository
         run: |
           git tag ${{ steps.semver.outputs.version_tag }}
           git push origin ${{ steps.semver.outputs.version_tag }}
-
-      - name: Semver version
-        run: echo Semver version ${{ steps.semver.outputs.version }}
-      - name: Semver version_tag
-        run: echo Semver version_tag ${{ steps.semver.outputs.version_tag }}
-      - name: Semver current_commit
-        run: echo Semver current_commit ${{ steps.semver.outputs.current_commit }}
-      - name: Semver previous_commit
-        run: echo Semver previous_commit ${{ steps.semver.outputs.previous_commit }}
-      - name: Semver previous_version
-        run: echo Semver previous_version ${{ steps.semver.outputs.previous_version }}
-      - name: Semver debug_output
-        run: echo Semver debug_output ${{ steps.semver.outputs.debug_output }}
-
-        #
