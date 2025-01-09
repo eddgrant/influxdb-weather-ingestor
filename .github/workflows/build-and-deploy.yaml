@@ -100,3 +100,5 @@ jobs:
         run: echo Semver previous_version ${{ steps.semver.outputs.previous_version }}
       - name: Semver debug_output
         run: echo Semver debug_output ${{ steps.semver.outputs.debug_output }}
+
+        #
