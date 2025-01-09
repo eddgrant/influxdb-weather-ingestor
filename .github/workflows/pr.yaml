@@ -4,7 +4,7 @@ on:
   pull_request:
 
 jobs:
-  pr-build:
+  pr-build-and-release:
     uses: ./.github/workflows/build-and-deploy.yaml
     permissions:
       contents: write

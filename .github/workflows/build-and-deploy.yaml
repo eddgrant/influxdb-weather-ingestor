@@ -81,6 +81,6 @@ jobs:
         run: |
           git tag ${{ steps.semver.outputs.version }}
           git push origin ${{ steps.semver.outputs.version }}
-        if: ${{ env.create_tag }}
+        if: ${{ env.create_tag == true }}
 
         # Test
