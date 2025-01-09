@@ -54,6 +54,7 @@ jobs:
         with:
           bump_each_commit: true
           enable_prerelease_mode: ${{ env.enable_prerelease_mode }}
+          version_format: "${major}.${minor}.${patch}-prerelease.${increment}"
 
       - name: Output semver debug information
         run: "echo SEMVER debug info: ${{ steps.semver.outputs.debug_output }}"
@@ -75,5 +76,5 @@ jobs:
 
       - name: Push tag to repository
         run: |
-          git tag ${{ steps.semver.outputs.version_tag }}
-          git push origin ${{ steps.semver.outputs.version_tag }}
+          git tag ${{ steps.semver.outputs.version }}
+          git push origin ${{ steps.semver.outputs.version }}
