@@ -19,10 +19,12 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  enable_prerelease_mode: ${{ github.event_name == 'pull_request' && true || false }}
-  version_format: ${{ github.event_name == 'pull_request' && '${major}.${minor}.${patch}-prerelease.${increment}' || '${major}.${minor}.${patch}' }}
+  #enable_prerelease_mode: ${{ github.event_name == 'pull_request' && true || false }}
+  #version_format: ${{ github.event_name == 'pull_request' && '${major}.${minor}.${patch}-prerelease.${increment}' || '${major}.${minor}.${patch}' }}
+  # Docker doesn't support the '+' character in image tags, so we can't quite use true semver, so we use a '-' instead. https://github.com/distribution/distribution/issues/1201
+  version_format: ${{ github.event_name == 'pull_request' && format('${{major}}.${{minor}}.${{patch}}-pr.{0}-{1}', github.event.number, github.sha) || '${major}.${minor}.${patch}' }}
   # Don't create tags for PR builds.
-  create_tag: ${{ github.event_name == 'pull_request' && false || true }}
+  # create_tag: ${{ github.event_name == 'pull_request' && 'false' || 'true' }}
 
 jobs:
   build:
@@ -56,7 +58,7 @@ jobs:
         uses: paulhatch/semantic-version@v5.4.0
         with:
           bump_each_commit: true
-          enable_prerelease_mode: ${{ env.enable_prerelease_mode }}
+          #enable_prerelease_mode: ${{ env.enable_prerelease_mode }}
           version_format: ${{ env.version_format }}
 
       - name: Output semver debug information
@@ -81,6 +83,6 @@ jobs:
         run: |
           git tag ${{ steps.semver.outputs.version }}
           git push origin ${{ steps.semver.outputs.version }}
-        if: ${{ env.create_tag == true }}
-
+        #if: ${{ env.create_tag == 'true' }}
+        if: ${{ steps.semver.outputs.version != steps.semver.outputs.previous_version }}
         # Test
