@@ -22,7 +22,7 @@ env:
   enable_prerelease_mode: ${{ github.event_name == 'pull_request' && true || false }}
   version_format: ${{ github.event_name == 'pull_request' && '${major}.${minor}.${patch}-prerelease.${increment}' || '${major}.${minor}.${patch}' }}
   # Don't create tags for PR builds.
-  create_tag: ${{ github.event_name == 'pull_request' && false || true }}
+  create_tag: ${{ github.event_name == 'pull_request' && 'false' || 'true' }}
 
 jobs:
   build:
@@ -81,6 +81,6 @@ jobs:
         run: |
           git tag ${{ steps.semver.outputs.version }}
           git push origin ${{ steps.semver.outputs.version }}
-        if: ${{ env.create_tag == true }}
+        if: ${{ env.create_tag == 'true' }}
 
         # Test
