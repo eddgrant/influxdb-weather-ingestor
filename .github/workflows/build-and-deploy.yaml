@@ -19,7 +19,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  prerelease_mode_enabled: "${{ github.event_name == 'pull_request' && true || false }}"
+  enable_prerelease_mode: "${{ github.event_name == 'pull_request' && true || false }}"
 
 jobs:
   build:
@@ -53,7 +53,7 @@ jobs:
         uses: paulhatch/semantic-version@v5.4.0
         with:
           bump_each_commit: true
-          enable_prerelease_mode: ${{ version_format }}
+          enable_prerelease_mode: ${{ env.enable_prerelease_mode }}
 
       - name: Output semver debug information
         run: "echo SEMVER debug info: ${{ steps.semver.outputs.debug_output }}"
