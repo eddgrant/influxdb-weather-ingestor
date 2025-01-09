@@ -56,7 +56,7 @@ jobs:
         with:
           #version_format: ${{ env.version_format }}
           bump_each_commit: true
-          bump_each_commit_patch_pattern: "(PATCH)"
+          #bump_each_commit_patch_pattern: "(PATCH)"
 
       - name: Output semver debug information
         run: "echo SEMVER debug info: ${{ steps.semver.outputs.debug_output }}"
@@ -83,10 +83,10 @@ jobs:
       #- name: Echo tag value
       #  run: echo Tag value is ${{ steps.tag-value.outputs.TAG_VALUE }}
 
-      #- name: Push tag to repository
-      #  run: |
-      #    git tag ${{ steps.semver.outputs.version_tag }}
-      #    git push origin ${{ steps.semver.outputs.version_tag }}
+      - name: Push tag to repository
+        run: |
+          git tag ${{ steps.semver.outputs.version_tag }}
+          git push origin ${{ steps.semver.outputs.version_tag }}
 
       - name: Semver version
         run: echo Semver version ${{ steps.semver.outputs.version }}
