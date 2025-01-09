@@ -72,14 +72,14 @@ jobs:
 
       #- name: Setup Gradle
       #  uses: gradle/actions/setup-gradle@v4
-#
+
       #- name: Build with Gradle
       #  run: ./gradlew -Pversion="${{ steps.semver.outputs.version }}" ${{ inputs.gradle_tasks }}
 
       #- name: Set tag value
       #  id: tag-value
       #  run: echo "TAG_VALUE=${{ github.event_name == 'pull_request' && steps.semver.outputs.version || steps.semver.outputs.version_tag }}" >> "$GITHUB_OUTPUT"
-#
+
       #- name: Echo tag value
       #  run: echo Tag value is ${{ steps.tag-value.outputs.TAG_VALUE }}
 
