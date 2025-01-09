@@ -19,7 +19,10 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  enable_prerelease_mode: "${{ github.event_name == 'pull_request' && true || false }}"
+  enable_prerelease_mode: ${{ github.event_name == 'pull_request' && true || false }}
+  version_format: ${{ github.event_name == 'pull_request' && '${major}.${minor}.${patch}-prerelease.${increment}' || '${major}.${minor}.${patch}' }}
+  # Don't create tags for PR builds.
+  create_tag: ${{ github.event_name == 'pull_request' && false || true }}
 
 jobs:
   build:
@@ -54,7 +57,7 @@ jobs:
         with:
           bump_each_commit: true
           enable_prerelease_mode: ${{ env.enable_prerelease_mode }}
-          version_format: "${major}.${minor}.${patch}-prerelease.${increment}"
+          version_format: ${{ env.version_format }}
 
       - name: Output semver debug information
         run: "echo SEMVER debug info: ${{ steps.semver.outputs.debug_output }}"
@@ -78,3 +81,4 @@ jobs:
         run: |
           git tag ${{ steps.semver.outputs.version }}
           git push origin ${{ steps.semver.outputs.version }}
+        if: ${{ env.create_tag }}
