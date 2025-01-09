@@ -88,5 +88,15 @@ jobs:
       #    git tag ${{ steps.semver.outputs.version_tag }}
       #    git push origin ${{ steps.semver.outputs.version_tag }}
 
-      - name: Semver outputs
-        run: echo Semver outputs ${{ toJSON(steps.semver.outputs) }}
+      - name: Semver version
+        run: echo Semver version ${{ steps.semver.outputs.version }}
+      - name: Semver version_tag
+        run: echo Semver version_tag ${{ steps.semver.outputs.version_tag }}
+      - name: Semver current_commit
+        run: echo Semver current_commit ${{ steps.semver.outputs.current_commit }}
+      - name: Semver previous_commit
+        run: echo Semver previous_commit ${{ steps.semver.outputs.previous_commit }}
+      - name: Semver previous_version
+        run: echo Semver previous_version ${{ steps.semver.outputs.previous_version }}
+      - name: Semver debug_output
+        run: echo Semver debug_output ${{ steps.semver.outputs.debug_output }}
