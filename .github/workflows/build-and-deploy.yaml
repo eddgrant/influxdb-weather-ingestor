@@ -12,6 +12,10 @@ on:
         required: true
       docker_hub_password:
         required: true
+      meteomatics_username:
+        required: true
+      meteomatics_password:
+        required: true
 
 concurrency:
   # Limit to a single concurrent invocation to ensure tagging works correctly.
@@ -74,6 +78,9 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew -Pversion="${{ steps.semver.outputs.version }}" ${{ inputs.gradle_tasks }}
+        env:
+          METEOMATICS_USERNAME: ${{ secrets.meteomatics_username }}
+          METEOMATICS_PASSWORD: ${{ secrets.meteomatics_password }}
 
       - name: Push tag to repository
         run: |
