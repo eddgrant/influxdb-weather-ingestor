@@ -13,3 +13,5 @@ jobs:
     secrets:
       docker_hub_username: ${{ secrets.DOCKER_HUB_USERNAME }}
       docker_hub_password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+      meteomatics_username: ${{ secrets.METEOMATICS_USERNAME }}
+      meteomatics_password: ${{ secrets.METEOMATICS_PASSWORD }}
