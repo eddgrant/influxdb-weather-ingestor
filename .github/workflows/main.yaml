@@ -10,8 +10,10 @@ jobs:
     uses: ./.github/workflows/build-and-deploy.yaml
     permissions:
       contents: write
+      checks: write
+
     with:
-      gradle_tasks: test dockerPushVersion dockerPushLatest --stacktrace --warning-mode all
+      gradle_tasks: check dockerPushVersion dockerPushLatest --stacktrace --warning-mode all
     secrets:
       docker_hub_username: ${{ secrets.DOCKER_HUB_USERNAME }}
       docker_hub_password: ${{ secrets.DOCKER_HUB_PASSWORD }}
