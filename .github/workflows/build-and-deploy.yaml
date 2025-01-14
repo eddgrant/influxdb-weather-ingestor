@@ -29,6 +29,8 @@ env:
 jobs:
   build:
     permissions:
+      actions: read
+      checks: write
       contents: write
     runs-on: ubuntu-latest
     steps:
@@ -81,6 +83,36 @@ jobs:
         env:
           METEOMATICS_USERNAME: ${{ secrets.meteomatics_username }}
           METEOMATICS_PASSWORD: ${{ secrets.meteomatics_password }}
+
+      - name: Upload test results artefacts
+        uses: actions/upload-artifact@v4
+        if: success() || failure()
+        with:
+          name: unit-test-results
+          path: build/test-results/test
+
+      - name: Upload integration test results artefacts
+        uses: actions/upload-artifact@v4
+        if: success() || failure()
+        with:
+          name: integration-test-results
+          path: build/test-results/integrationTest
+
+      - name: Publish Unit Test Report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: Unit Tests
+          path: build/test-results/test/TEST-*.xml
+          reporter: java-junit
+
+      - name: Publish Integration Test Report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: Integration Tests
+          path: build/test-results/integrationTest/TEST-*.xml
+          reporter: java-junit
 
       - name: Push tag to repository
         run: |
