@@ -9,8 +9,9 @@ jobs:
   main-build-and-release:
     uses: ./.github/workflows/build-and-deploy.yaml
     permissions:
-      contents: write
+      actions: read
       checks: write
+      contents: write
 
     with:
       gradle_tasks: check dockerPushVersion dockerPushLatest --stacktrace --warning-mode all

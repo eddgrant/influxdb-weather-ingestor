@@ -17,9 +17,6 @@ on:
       meteomatics_password:
         required: true
 
-permissions:
-  checks: write
-
 concurrency:
   # Limit to a single concurrent invocation to ensure tagging works correctly.
   group: influxdb-weather-ingestor
@@ -32,6 +29,8 @@ env:
 jobs:
   build:
     permissions:
+      actions: read
+      checks: write
       contents: write
     runs-on: ubuntu-latest
     steps:

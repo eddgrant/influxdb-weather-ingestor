@@ -7,8 +7,10 @@ jobs:
   pr-build-and-release:
     uses: ./.github/workflows/build-and-deploy.yaml
     permissions:
-      contents: write
+      actions: read
       checks: write
+      contents: write
+
     with:
       gradle_tasks: check dockerPushVersion --stacktrace --warning-mode all
     secrets:
