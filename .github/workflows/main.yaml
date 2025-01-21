@@ -33,4 +33,5 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
           repository: eddgrant/influxdb-weather-ingestor
-          short-description: A simple utility which obtains temperature data, based on UK postcode, and sends it to an InfluxDB endpoint.
+          short-description: A simple utility which obtains temperature data, based on UK postcode, and sends it to InfluxDB.
+          enable-url-completion: true
