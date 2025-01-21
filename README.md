@@ -1,5 +1,3 @@
-![Unit Tests](https://github.com/eddgrant/influxdb-weather-ingestor/actions/workflows/unit-tests.yaml/badge.svg)
-
 # influxdb-weather-ingestor
 
 A simple utility which obtains temperature data, based on UK postcode, and sends it to an InfluxDB endpoint.
