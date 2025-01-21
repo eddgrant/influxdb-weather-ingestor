@@ -27,15 +27,23 @@ env:
   version_format: ${{ github.event_name == 'pull_request' && format('${{major}}.${{minor}}.${{patch}}-pr.{0}-{1}', github.event.number, github.sha) || '${major}.${minor}.${patch}' }}
 
 jobs:
-  run-unit-tests:
+  unit-tests:
     uses: ./.github/workflows/unit-tests.yaml
+
+  integration-tests:
+    uses: ./.github/workflows/integration-tests.yaml
+    secrets:
+      meteomatics_username: ${{ secrets.meteomatics_username }}
+      meteomatics_password: ${{ secrets.meteomatics_password }}
 
   build:
     permissions:
       actions: read
       checks: write
       contents: write
-    needs: run-unit-tests
+    needs:
+      - unit-tests
+      - integration-tests
     runs-on: ubuntu-latest
     steps:
       # Try updating to latest version of Docker to resolve 'Could not push image: missing content-length header for request:' issue.
@@ -82,27 +90,9 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      # Note: We skip unit tests as we're already run them above.
+      # Note: We skip unit and integration tests as we're already run them above.
       - name: Build with Gradle
-        run: ./gradlew --exclude-task test -Pversion="${{ steps.semver.outputs.version }}" ${{ inputs.gradle_tasks }}
-        env:
-          METEOMATICS_USERNAME: ${{ secrets.meteomatics_username }}
-          METEOMATICS_PASSWORD: ${{ secrets.meteomatics_password }}
-
-      - name: Upload integration test results artefacts
-        uses: actions/upload-artifact@v4
-        if: success() || failure()
-        with:
-          name: integration-test-results
-          path: build/test-results/integrationTest
-
-      - name: Publish Integration Test Report
-        uses: dorny/test-reporter@v1
-        if: success() || failure()
-        with:
-          name: Integration Tests
-          path: build/test-results/integrationTest/TEST-*.xml
-          reporter: java-junit
+        run: ./gradlew --exclude-task test --exclude-task check -Pversion="${{ steps.semver.outputs.version }}" ${{ inputs.gradle_tasks }}
 
       - name: Push tag to repository
         run: |

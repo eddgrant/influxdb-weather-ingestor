@@ -1,14 +1,14 @@
-name: Run unit tests and publish their results
+name: unit-tests
 
 on:
   workflow_call:
 
 jobs:
-  run-tests-and-publish-results:
+  run:
     permissions:
-      actions: read
-      checks: write
-      contents: write
+      actions: read # Is this needed?
+      checks: write # Needed by test-reporter to create a check which represents the test run.
+      contents: write # Is this needed?
     runs-on: ubuntu-latest
     steps:
     - name: Checkout sources
@@ -17,7 +17,7 @@ jobs:
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v4
 
-    - name: Build with Gradle
+    - name: Run Unit Tests
       run: ./gradlew test
 
     - name: Upload test results artefacts
