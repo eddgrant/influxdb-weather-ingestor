@@ -32,7 +32,7 @@ jobs:
 
   build:
     permissions:
-      actions: read
+      actions: write
       checks: write
       contents: write
     needs: run-unit-tests
