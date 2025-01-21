@@ -24,6 +24,9 @@ jobs:
     needs: main-build-and-release
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
       - name: Docker Hub Documentation
         uses: peter-evans/dockerhub-description@v4
         with:
