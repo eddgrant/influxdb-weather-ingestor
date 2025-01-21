@@ -12,7 +12,6 @@ jobs:
       actions: write
       checks: write
       contents: write
-
     with:
       gradle_tasks: check dockerPushVersion dockerPushLatest --stacktrace --warning-mode all
     secrets:
@@ -20,3 +19,15 @@ jobs:
       docker_hub_password: ${{ secrets.DOCKER_HUB_PASSWORD }}
       meteomatics_username: ${{ secrets.METEOMATICS_USERNAME }}
       meteomatics_password: ${{ secrets.METEOMATICS_PASSWORD }}
+
+  update-docker-hub-documentation:
+    needs: main-build-and-release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Docker Hub Documentation
+        uses: peter-evans/dockerhub-description@v4
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          repository: eddgrant/influxdb-weather-ingestor
+          short-description: A simple utility which obtains temperature data, based on UK postcode, and sends it to an InfluxDB endpoint.
