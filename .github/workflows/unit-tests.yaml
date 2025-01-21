@@ -2,13 +2,14 @@ name: Run unit tests and publish their results
 
 on:
   workflow_call:
+  workflow_dispatch:
 
 jobs:
   run-tests-and-publish-results:
     permissions:
-      actions: read
-      checks: write
-      contents: write
+      actions: write # Needed to update the workflow status, used in the status badge.
+      checks: write # Needed by test-reporter to create a check which represents the test run.
+      contents: write # Is this needed?
     runs-on: ubuntu-latest
     steps:
     - name: Checkout sources
@@ -19,6 +20,18 @@ jobs:
 
     - name: Build with Gradle
       run: ./gradlew test
+
+      # See: https://github.com/orgs/community/discussions/66910
+    - name: Update Workflow Status
+      run: |
+        repo_token="${{ secrets.GITHUB_TOKEN }}"
+        workflow_file="unit-tests.yaml"
+        payload="{\"ref\": \"main\", \"inputs\": {}}"
+        response=$(curl -X POST "https://api.github.com/repos/${{ github.repository }}/actions/workflows/${workflow_file}/dispatches" \
+            -H "Authorization: Bearer $repo_token" \
+            -H "Accept: application/vnd.github.v3+json" \
+            -d "$payload")
+        echo "$response"
 
     - name: Upload test results artefacts
       uses: actions/upload-artifact@v4
