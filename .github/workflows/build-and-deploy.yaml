@@ -27,11 +27,15 @@ env:
   version_format: ${{ github.event_name == 'pull_request' && format('${{major}}.${{minor}}.${{patch}}-pr.{0}-{1}', github.event.number, github.sha) || '${major}.${minor}.${patch}' }}
 
 jobs:
+  run-unit-tests:
+    uses: ./.github/workflows/unit-tests.yaml
+
   build:
     permissions:
       actions: read
       checks: write
       contents: write
+    needs: run-unit-tests
     runs-on: ubuntu-latest
     steps:
       # Try updating to latest version of Docker to resolve 'Could not push image: missing content-length header for request:' issue.
@@ -78,18 +82,12 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      # Note: We skip unit tests as we're already run them above.
       - name: Build with Gradle
-        run: ./gradlew -Pversion="${{ steps.semver.outputs.version }}" ${{ inputs.gradle_tasks }}
+        run: ./gradlew --exclude-task test -Pversion="${{ steps.semver.outputs.version }}" ${{ inputs.gradle_tasks }}
         env:
           METEOMATICS_USERNAME: ${{ secrets.meteomatics_username }}
           METEOMATICS_PASSWORD: ${{ secrets.meteomatics_password }}
-
-      - name: Upload test results artefacts
-        uses: actions/upload-artifact@v4
-        if: success() || failure()
-        with:
-          name: unit-test-results
-          path: build/test-results/test
 
       - name: Upload integration test results artefacts
         uses: actions/upload-artifact@v4
@@ -97,14 +95,6 @@ jobs:
         with:
           name: integration-test-results
           path: build/test-results/integrationTest
-
-      - name: Publish Unit Test Report
-        uses: dorny/test-reporter@v1
-        if: success() || failure()
-        with:
-          name: Unit Tests
-          path: build/test-results/test/TEST-*.xml
-          reporter: java-junit
 
       - name: Publish Integration Test Report
         uses: dorny/test-reporter@v1
