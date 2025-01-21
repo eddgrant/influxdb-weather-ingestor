@@ -7,7 +7,7 @@ jobs:
   pr-build-and-release:
     uses: ./.github/workflows/build-and-deploy.yaml
     permissions:
-      actions: read
+      actions: write
       checks: write
       contents: write
 
