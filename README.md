@@ -91,3 +91,6 @@ Each time a temperature measurement is sent to InfluxDB an `INFO` level log entr
 ```
 
 Development related information can be found in [docs/development.md](docs/development.md)
+
+
+TESTING
