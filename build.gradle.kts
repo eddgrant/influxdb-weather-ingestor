@@ -45,7 +45,7 @@ dependencies {
     implementation("io.micronaut.serde:micronaut-serde-jackson")
 
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.2")
-    implementation("com.influxdb:influxdb-client-kotlin:7.2.0")
+    implementation("com.influxdb:influxdb-client-kotlin:7.3.0")
 
     annotationProcessor("io.micronaut.validation:micronaut-validation-processor")
     implementation("io.micronaut.validation:micronaut-validation")
