@@ -1,10 +1,13 @@
+@file:OptIn(ExperimentalTime::class)
+
 package com.eddgrant.influxdbWeatherIngestor.weather
 
 import com.eddgrant.influxdbWeatherIngestor.location.Location
 import com.eddgrant.influxdbWeatherIngestor.weather.meteomatics.MeteomaticsClient
 import jakarta.inject.Singleton
-import kotlinx.datetime.Instant
 import org.slf4j.LoggerFactory
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 @Singleton
 class WeatherService(private val meteomaticsClient: MeteomaticsClient) {
