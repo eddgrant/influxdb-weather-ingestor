@@ -6,7 +6,7 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version "2.1.21"
     id("org.jetbrains.kotlin.plugin.allopen") version "2.1.21"
     id("com.google.devtools.ksp") version "2.1.20-1.0.32"
-    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("com.gradleup.shadow") version "8.3.7"
     id("io.micronaut.application") version "4.5.4"
     id("io.micronaut.aot") version "4.5.4"
     id("com.bmuschko.docker-remote-api") version "9.4.0" // apply false
@@ -44,7 +44,7 @@ dependencies {
     annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
     implementation("io.micronaut.serde:micronaut-serde-jackson")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.0")
     implementation("com.influxdb:influxdb-client-kotlin:7.3.0")
 
     annotationProcessor("io.micronaut.validation:micronaut-validation-processor")

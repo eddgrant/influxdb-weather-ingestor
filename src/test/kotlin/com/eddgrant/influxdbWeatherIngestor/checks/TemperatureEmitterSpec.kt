@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalTime::class)
+
 package com.eddgrant.influxdbWeatherIngestor.checks
 
 import com.eddgrant.influxdbWeatherIngestor.location.Location
@@ -14,10 +16,9 @@ import io.micronaut.test.annotation.MockBean
 import io.micronaut.test.extensions.kotest5.MicronautKotest5Extension.getMock
 import io.micronaut.test.extensions.kotest5.annotation.MicronautTest
 import io.mockk.*
-import kotlinx.datetime.Clock
-import kotlinx.datetime.toJavaInstant
-import java.time.ZoneId
-import java.time.Clock as JavaClock
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
+import kotlin.time.toJavaInstant
 
 @MicronautTest
 class TemperatureEmitterSpec(
@@ -34,16 +35,14 @@ class TemperatureEmitterSpec(
 
     given("The InfluxDB client is unable to write to InfluxDB") {
         val now = Clock.System.now()
-        val fixedClock = JavaClock.fixed(now.toJavaInstant(), ZoneId.systemDefault())
+        mockkObject(Clock.System)
+        every { Clock.System.now() } returns now
 
         val temperatureMeasurement = Temperature(
             postCode,
             temperature,
             now.toJavaInstant()
         )
-
-        mockkStatic(JavaClock::class)
-        every { JavaClock.systemUTC() } returns fixedClock
 
         `when`("we attempt to emit the Temperature measurement") {
 

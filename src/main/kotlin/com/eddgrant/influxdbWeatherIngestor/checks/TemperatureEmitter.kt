@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalTime::class)
+
 package com.eddgrant.influxdbWeatherIngestor.checks
 
 import com.eddgrant.influxdbWeatherIngestor.location.PostcodesIoClient
@@ -9,9 +11,10 @@ import io.micronaut.http.HttpStatus
 import jakarta.inject.Singleton
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import kotlinx.datetime.Clock
-import kotlinx.datetime.toJavaInstant
 import org.slf4j.LoggerFactory
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
+import kotlin.time.toJavaInstant
 
 /**
  * Scheduled Task

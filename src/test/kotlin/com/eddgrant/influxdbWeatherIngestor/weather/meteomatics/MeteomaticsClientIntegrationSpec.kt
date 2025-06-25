@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalTime::class)
+
 package com.eddgrant.influxdbWeatherIngestor.weather.meteomatics
 
 import com.eddgrant.influxdbWeatherIngestor.location.Location
@@ -7,7 +9,8 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.beInstanceOf
 import io.micronaut.http.HttpStatus
 import io.micronaut.test.extensions.kotest5.annotation.MicronautTest
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 @MicronautTest(environments = ["integration-test"])
 class MeteomaticsClientIntegrationSpec(private val meteomaticsClient: MeteomaticsClient) : FunSpec({
