@@ -3,8 +3,8 @@ import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
 import io.micronaut.gradle.docker.MicronautDockerfile
 
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "2.1.21"
-    id("org.jetbrains.kotlin.plugin.allopen") version "2.1.21"
+    id("org.jetbrains.kotlin.jvm") version "2.2.20"
+    id("org.jetbrains.kotlin.plugin.allopen") version "2.2.20"
     id("com.google.devtools.ksp") version "2.1.20-1.0.32"
     id("com.gradleup.shadow") version "8.3.9"
     id("io.micronaut.application") version "4.5.5"
