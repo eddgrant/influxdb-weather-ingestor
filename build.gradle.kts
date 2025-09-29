@@ -6,7 +6,7 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version "2.2.20"
     id("org.jetbrains.kotlin.plugin.allopen") version "2.2.20"
     id("com.google.devtools.ksp") version "2.2.20-2.0.3"
-    id("com.gradleup.shadow") version "8.3.9"
+    id("com.gradleup.shadow") version "9.2.2"
     id("io.micronaut.application") version "4.5.5"
     id("io.micronaut.aot") version "4.5.5"
     id("com.bmuschko.docker-remote-api") version "9.4.0" // apply false
