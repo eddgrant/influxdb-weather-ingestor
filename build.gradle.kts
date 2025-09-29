@@ -3,9 +3,9 @@ import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
 import io.micronaut.gradle.docker.MicronautDockerfile
 
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "2.1.21"
-    id("org.jetbrains.kotlin.plugin.allopen") version "2.1.21"
-    id("com.google.devtools.ksp") version "2.1.20-1.0.32"
+    id("org.jetbrains.kotlin.jvm") version "2.2.20"
+    id("org.jetbrains.kotlin.plugin.allopen") version "2.2.20"
+    id("com.google.devtools.ksp") version "2.2.20-2.0.3"
     id("com.gradleup.shadow") version "8.3.9"
     id("io.micronaut.application") version "4.5.5"
     id("io.micronaut.aot") version "4.5.5"
@@ -27,30 +27,30 @@ repositories {
 dependencies {
     runtimeOnly("org.yaml:snakeyaml")
 
-    ksp("io.micronaut:micronaut-http-validation")
-    ksp("io.micronaut.serde:micronaut-serde-processor")
-    implementation("io.micronaut.serde:micronaut-serde-jackson")
-    implementation("io.micronaut:micronaut-http-client")
+    ksp(mn.micronaut.http.validation)
+    ksp(mn.micronaut.serde.processor)
+    implementation(mn.micronaut.serde.jackson)
+    implementation(mn.micronaut.http.client)
     runtimeOnly("ch.qos.logback:logback-classic")
 
-    implementation("io.micronaut:micronaut-jackson-databind")
-    implementation("io.micronaut.kotlin:micronaut-kotlin-runtime")
+    implementation(mn.micronaut.jackson.databind)
+    implementation(mn.micronaut.kotlin.runtime)
     implementation("jakarta.annotation:jakarta.annotation-api")
     implementation("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}")
     runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     // Replace Jackson with micronaut-serialization
-    annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
-    implementation("io.micronaut.serde:micronaut-serde-jackson")
+    annotationProcessor(mn.micronaut.serde.processor)
+    implementation(mn.micronaut.serde.jackson)
 
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1-0.6.x-compat")
     implementation("com.influxdb:influxdb-client-kotlin:7.3.0")
 
-    annotationProcessor("io.micronaut.validation:micronaut-validation-processor")
-    implementation("io.micronaut.validation:micronaut-validation")
+    annotationProcessor(mn.micronaut.validation.processor)
+    implementation(mn.micronaut.validation)
 
-    testImplementation("io.micronaut:micronaut-http-client")
+    testImplementation(mn.micronaut.http.client)
 }
 
 application {
