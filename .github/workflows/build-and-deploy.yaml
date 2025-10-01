@@ -88,7 +88,7 @@ jobs:
         run:  echo ${{ secrets.docker_hub_password }} | docker login --username ${{ secrets.docker_hub_username }} --password-stdin registry.hub.docker.com/library/eddgrant/influxdb-weather-ingestor
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v5
 
       # Note: We skip unit and integration tests as we're already run them above.
       - name: Build with Gradle
