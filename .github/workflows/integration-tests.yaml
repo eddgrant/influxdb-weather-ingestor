@@ -29,7 +29,7 @@ jobs:
         METEOMATICS_PASSWORD: ${{ secrets.meteomatics_password }}
 
     - name: Upload integration test results artefacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       if: success() || failure()
       with:
         name: integration-test-results
