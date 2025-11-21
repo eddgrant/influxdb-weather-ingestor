@@ -43,6 +43,7 @@ class TemperatureEmitter(
         )
 
         val temperatureMeasurement = Temperature(
+            checkConfiguration.source,
             checkConfiguration.postcode,
             temperature,
             dateTime.toJavaInstant()
