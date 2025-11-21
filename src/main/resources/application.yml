@@ -10,6 +10,9 @@ micronaut:
       meteomatics:
         urls:
           - "https://api.meteomatics.com"
+      weatherapi:
+        urls:
+          - "http://api.weatherapi.com"
       postcodes-io:
         urls:
           - "https://api.postcodes.io"
@@ -28,3 +31,6 @@ logger:
       retry: DEBUG
     com:
       eddgrant: INFO
+
+weather:
+  provider: weatherapi.com
