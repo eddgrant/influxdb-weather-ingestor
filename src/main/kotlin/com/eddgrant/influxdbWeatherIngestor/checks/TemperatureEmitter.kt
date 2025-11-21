@@ -7,6 +7,7 @@ import com.eddgrant.influxdbWeatherIngestor.persistence.influxdb.Temperature
 import com.eddgrant.influxdbWeatherIngestor.weather.WeatherService
 import com.influxdb.client.domain.WritePrecision
 import com.influxdb.client.kotlin.InfluxDBClientKotlin
+import io.micronaut.context.annotation.Value
 import io.micronaut.http.HttpStatus
 import jakarta.inject.Singleton
 import kotlinx.coroutines.launch
@@ -25,7 +26,8 @@ class TemperatureEmitter(
     private val checkConfiguration: CheckConfiguration,
     private val postcodesIoClient: PostcodesIoClient,
     private val weatherService: WeatherService,
-    private val influxDBClient: InfluxDBClientKotlin
+    private val influxDBClient: InfluxDBClientKotlin,
+    @param:Value($$"${weather.provider}") private val provider: String
 ) {
     fun emitTemperature() {
         val dateTime = Clock.System.now()
@@ -43,10 +45,11 @@ class TemperatureEmitter(
         )
 
         val temperatureMeasurement = Temperature(
-            checkConfiguration.source,
-            checkConfiguration.postcode,
-            temperature,
-            dateTime.toJavaInstant()
+            source = checkConfiguration.source,
+            postcode = checkConfiguration.postcode,
+            provider = provider,
+            value = temperature,
+            time = dateTime.toJavaInstant()
         )
 
         runBlocking {
@@ -64,6 +67,7 @@ class TemperatureEmitter(
             }
             job.join()
             LOGGER.info("Temperature measurement sent: Postcode: ${checkConfiguration.postcode}, Temperature: $temperature")
+            LOGGER.debug("Measurement data: {}", temperatureMeasurement.toString())
         }
     }
 
