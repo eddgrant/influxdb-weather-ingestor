@@ -14,3 +14,16 @@ influxdb:
 meteomatics:
   username: edd.grant
   password: my-very-secure-influxdb-token
+
+weather:
+  provider: meteomatics
+
+micronaut:
+  http:
+    services:
+      meteomatics:
+        urls:
+          - "https://api.meteomatics.com"
+      weatherapi:
+        urls:
+          - "http://api.weatherapi.com"

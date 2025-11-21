@@ -10,6 +10,9 @@ micronaut:
       meteomatics:
         urls:
           - "https://api.meteomatics.com"
+      weatherapi:
+        urls:
+          - "http://api.weatherapi.com"
       postcodes-io:
         urls:
           - "https://api.postcodes.io"
@@ -34,3 +37,6 @@ checks:
 
 influxdb:
   logLevel: BODY
+
+weather:
+  provider: meteomatics
