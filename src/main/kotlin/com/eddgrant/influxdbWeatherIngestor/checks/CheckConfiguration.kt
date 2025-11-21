@@ -16,7 +16,7 @@ class CheckConfiguration {
     lateinit var postcode : String
 
     companion object {
-        const val DEFAULT_SOURCE = "influxdb-weather-ingester"
+        const val DEFAULT_SOURCE = "influxdb-weather-ingestor"
         const val DEFAULT_SCHEDULE_EXPRESSION = "* * * * *"
     }
 }
