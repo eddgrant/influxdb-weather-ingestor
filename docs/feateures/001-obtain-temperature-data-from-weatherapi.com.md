@@ -32,7 +32,7 @@ The temperature API used should depend on application configuration, with the us
 - WeatherAPI
   - Property: `weatherapi.apiKey`
   - Typical environment variable: `WEATHERAPI_API_KEY` (Micronaut maps env vars to properties). Some tooling and tests also accept `WEATHERAPI_APIKEY`.
-  - HTTP service id: `weatherapi` with base URL `http://api.weatherapi.com` (configured under `micronaut.http.services.weatherapi.urls`).
+  - HTTP service id: `weatherapi` with base URL `https://api.weatherapi.com` (configured under `micronaut.http.services.weatherapi.urls`).
 
 - Meteomatics
   - Properties: `meteomatics.username`, `meteomatics.password`

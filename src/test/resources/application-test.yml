@@ -26,4 +26,4 @@ micronaut:
           - "https://api.meteomatics.com"
       weatherapi:
         urls:
-          - "http://api.weatherapi.com"
+          - "https://api.weatherapi.com"
