@@ -3,10 +3,8 @@
 package com.eddgrant.influxdbWeatherIngestor.weather
 
 import com.eddgrant.influxdbWeatherIngestor.location.Location
-import com.eddgrant.influxdbWeatherIngestor.weather.meteomatics.MeteomaticsClient
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
-import io.micronaut.http.HttpResponse
 import io.micronaut.test.annotation.MockBean
 import io.micronaut.test.extensions.kotest5.annotation.MicronautTest
 import io.mockk.every
@@ -23,7 +21,7 @@ val now = Clock.System.now()
 class WeatherServiceSpec(
     private val underTest: WeatherService
 ) : BehaviorSpec({
-   given("it returns the temperature from the Meteomatics API response") {
+   given("it returns the temperature from the WeatherClient") {
        val expectedTemperature = 15.6
 
        `when`("it is called") {
@@ -34,32 +32,10 @@ class WeatherServiceSpec(
        }
    }
 }) {
-    @MockBean(MeteomaticsClient::class)
-    fun meteomaticsClient(): MeteomaticsClient {
-        val expectedTemperature = 15.6
-        val expectedResponseBody = mapOf<String, Any>(
-            "data" to listOf<Any>(
-                mapOf<Any, Any>(
-                    "coordinates" to listOf<Any>(
-                        mapOf<Any, Any>(
-                            "dates" to listOf<Any>(
-                                mapOf<Any, Any>(
-                                    "value" to expectedTemperature
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        )
-        val mock = mockk<MeteomaticsClient>()
-        every {
-            mock.getTemperatureByDateAndLocation(
-                now.toString(),
-                location.latitude,
-                location.longitude
-            )
-        } returns HttpResponse.ok(expectedResponseBody)
+    @MockBean(WeatherClient::class)
+    fun weatherClient(): WeatherClient {
+        val mock = mockk<WeatherClient>()
+        every { mock.getTemperatureByDateAndLocation(now, location) } returns 15.6
         return mock
     }
 }
