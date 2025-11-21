@@ -11,6 +11,7 @@ import com.influxdb.client.kotlin.InfluxDBClientKotlin
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
+import io.micronaut.context.annotation.Value
 import io.micronaut.http.HttpResponse
 import io.micronaut.test.annotation.MockBean
 import io.micronaut.test.extensions.kotest5.MicronautKotest5Extension.getMock
@@ -26,7 +27,8 @@ class TemperatureEmitterSpec(
     private val postcodesIoClient: PostcodesIoClient,
     private val weatherService: WeatherService,
     private val influxDBClient: InfluxDBClientKotlin,
-    private val checkConfiguration: CheckConfiguration
+    private val checkConfiguration: CheckConfiguration,
+    @param:Value($$"${weather.provider}") private val provider: String
 ) : BehaviorSpec({
 
     val postCode = "AB12 3CD"
@@ -41,6 +43,7 @@ class TemperatureEmitterSpec(
         val temperatureMeasurement = Temperature(
             checkConfiguration.source,
             postCode,
+            provider,
             temperature,
             now.toJavaInstant()
         )

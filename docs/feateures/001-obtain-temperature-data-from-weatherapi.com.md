@@ -10,6 +10,8 @@ It should be possible for a user of influxdb-weather-ingestor to obtain temperat
 
 The temperature API used should depend on application configuration, with the user providing the appropriate credentials. Configuration determines which Micronaut beans get instantiated and used.
 
+Each Temperature measurement, sent to InfluxDB, should have a `provider` tag, to identify which provider provided the temperature data. The values should be "meteomatics" or "weatherapi.com", as appropriate.
+
 ## Implementation summary (as built)
 
 - Introduced provider-agnostic WeatherClient interface that abstracts temperature retrieval.
