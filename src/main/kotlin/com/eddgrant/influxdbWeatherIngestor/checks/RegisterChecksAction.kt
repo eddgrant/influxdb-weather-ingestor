@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory
 class RegisterChecksAction(
     private val checkConfiguration: CheckConfiguration,
     private val temperatureEmitter: TemperatureEmitter,
-    @Named(TaskExecutors.SCHEDULED) private val taskScheduler: TaskScheduler
+    @field:Named(TaskExecutors.SCHEDULED) private val taskScheduler: TaskScheduler
 ) {
     fun register() {
         val checkTemperatureTask = CheckTemperatureTask(temperatureEmitter)
