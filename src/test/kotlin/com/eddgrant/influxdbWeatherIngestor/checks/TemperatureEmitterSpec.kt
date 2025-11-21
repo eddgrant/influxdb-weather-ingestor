@@ -39,6 +39,7 @@ class TemperatureEmitterSpec(
         every { Clock.System.now() } returns now
 
         val temperatureMeasurement = Temperature(
+            checkConfiguration.source,
             postCode,
             temperature,
             now.toJavaInstant()

@@ -5,10 +5,19 @@ import jakarta.validation.constraints.NotBlank
 
 @ConfigurationProperties("checks")
 class CheckConfiguration {
+
     @NotBlank
-    var scheduleExpression : String = "* * * * *"
+    val source: String = DEFAULT_SOURCE
+
+    @NotBlank
+    var scheduleExpression : String = DEFAULT_SCHEDULE_EXPRESSION
 
     @NotBlank
     lateinit var postcode : String
+
+    companion object {
+        const val DEFAULT_SOURCE = "influxdb-weather-ingester"
+        const val DEFAULT_SCHEDULE_EXPRESSION = "* * * * *"
+    }
 }
 
