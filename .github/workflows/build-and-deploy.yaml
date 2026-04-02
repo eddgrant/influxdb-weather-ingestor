@@ -16,6 +16,10 @@ on:
         required: true
       meteomatics_password:
         required: true
+    outputs:
+      version:
+        description: The semantic version of the built Docker image
+        value: ${{ jobs.build.outputs.version }}
 
 concurrency:
   # Limit to a single concurrent invocation to ensure tagging works correctly.
@@ -37,6 +41,8 @@ jobs:
       meteomatics_password: ${{ secrets.meteomatics_password }}
 
   build:
+    outputs:
+      version: ${{ steps.semver.outputs.version }}
     permissions:
       actions: read
       checks: write
