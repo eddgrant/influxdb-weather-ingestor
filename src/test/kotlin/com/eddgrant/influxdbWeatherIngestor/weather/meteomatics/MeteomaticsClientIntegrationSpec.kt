@@ -9,27 +9,26 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.beInstanceOf
 import io.micronaut.http.HttpStatus
 import io.micronaut.test.extensions.kotest5.annotation.MicronautTest
-import org.junit.jupiter.api.Disabled
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
-@Disabled("Meteomatics has deprecated free API accounts")
-@MicronautTest(environments = ["integration-test"])
-class MeteomaticsClientIntegrationSpec(private val meteomaticsClient: MeteomaticsClient) : FunSpec({
+// Disabled: Meteomatics has deprecated free API accounts
+// @MicronautTest(environments = ["integration-test"])
+class MeteomaticsClientIntegrationSpec : FunSpec({
 
-    context("it can obtain temperature data by date and location") {
-        val location = Location("51.427195", "-0.108248")
-        val now = Clock.System.now().toString()
-        val response = meteomaticsClient.getTemperatureByDateAndLocation(
-            now,
-            location.latitude,
-            location.longitude
-        )
-        response.status shouldBe HttpStatus.OK
-        ((((((response.body()
-            ?.get("data") as ArrayList<*>).first() as Map<*, *>)
-            .get("coordinates") as ArrayList<*>).first() as Map<*, *>)
-            .get("dates") as ArrayList<*>).first() as Map<*, *>)
-            .get("value") should beInstanceOf<Number>()
+    xcontext("it can obtain temperature data by date and location") {
+        // val location = Location("51.427195", "-0.108248")
+        // val now = Clock.System.now().toString()
+        // val response = meteomaticsClient.getTemperatureByDateAndLocation(
+        //     now,
+        //     location.latitude,
+        //     location.longitude
+        // )
+        // response.status shouldBe HttpStatus.OK
+        // ((((((response.body()
+        //     ?.get("data") as ArrayList<*>).first() as Map<*, *>)
+        //     .get("coordinates") as ArrayList<*>).first() as Map<*, *>)
+        //     .get("dates") as ArrayList<*>).first() as Map<*, *>)
+        //     .get("value") should beInstanceOf<Number>()
     }
 })
