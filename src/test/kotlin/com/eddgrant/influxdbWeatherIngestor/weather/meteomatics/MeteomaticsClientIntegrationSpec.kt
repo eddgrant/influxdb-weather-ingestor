@@ -9,6 +9,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.beInstanceOf
 import io.micronaut.http.HttpStatus
 import io.micronaut.test.extensions.kotest5.annotation.MicronautTest
+import org.junit.jupiter.api.Assumptions.assumeTrue
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -16,6 +17,11 @@ import kotlin.time.ExperimentalTime
 class MeteomaticsClientIntegrationSpec(private val meteomaticsClient: MeteomaticsClient) : FunSpec({
 
     context("it can obtain temperature data by date and location") {
+        val username = System.getenv("METEOMATICS_USERNAME")
+        val password = System.getenv("METEOMATICS_PASSWORD")
+        // Skip this test if Meteomatics credentials are not present in the environment
+        assumeTrue(!username.isNullOrBlank() && !password.isNullOrBlank())
+
         val location = Location("51.427195", "-0.108248")
         val now = Clock.System.now().toString()
         val response = meteomaticsClient.getTemperatureByDateAndLocation(
