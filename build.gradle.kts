@@ -123,6 +123,8 @@ tasks.named<MicronautDockerfile>("dockerfile") {
 val integrationTestTask = tasks.register<Test>("integrationTest") {
     description = "Runs integration tests."
     group = "verification"
+    testClassesDirs = sourceSets["test"].output.classesDirs
+    classpath = sourceSets["test"].runtimeClasspath
     useJUnitPlatform()
     filter {
         includeTestsMatching("*Integration*")
