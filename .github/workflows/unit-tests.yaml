@@ -6,9 +6,8 @@ on:
 jobs:
   run:
     permissions:
-      actions: read # Is this needed?
       checks: write # Needed by test-reporter to create a check which represents the test run.
-      contents: write # Is this needed?
+      contents: read # Needed by actions/checkout
     runs-on: ubuntu-latest
     steps:
     - name: Checkout sources
