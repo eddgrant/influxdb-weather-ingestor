@@ -21,7 +21,6 @@ import kotlin.time.toJavaInstant
  * Scheduled Task
  */
 @Singleton
-//@RequiresCheckConfiguration
 class TemperatureEmitter(
     private val checkConfiguration: CheckConfiguration,
     private val postcodesIoClient: PostcodesIoClient,
