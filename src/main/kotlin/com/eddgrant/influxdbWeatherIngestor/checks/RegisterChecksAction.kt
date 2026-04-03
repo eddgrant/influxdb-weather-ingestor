@@ -12,14 +12,20 @@ class RegisterChecksAction(
     private val temperatureEmitter: TemperatureEmitter,
     @field:Named(TaskExecutors.SCHEDULED) private val taskScheduler: TaskScheduler
 ) {
+    private var scheduledFuture: java.util.concurrent.ScheduledFuture<*>? = null
+
     fun register() {
         val checkTemperatureTask = CheckTemperatureTask(temperatureEmitter)
-        taskScheduler.schedule(
+        scheduledFuture = taskScheduler.schedule(
             checkConfiguration.scheduleExpression,
             checkTemperatureTask
         )
         LOGGER.info("Temperature checks scheduled to run on schedule: ${checkConfiguration.scheduleExpression}")
     }
+
+    fun isScheduleActive(): Boolean =
+        scheduledFuture != null && !scheduledFuture!!.isCancelled
+
  companion object {
      private val LOGGER = LoggerFactory.getLogger(RegisterChecksAction::class.java)
  }
