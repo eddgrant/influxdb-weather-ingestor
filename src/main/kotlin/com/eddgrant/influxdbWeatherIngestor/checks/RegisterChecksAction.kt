@@ -21,6 +21,6 @@ class RegisterChecksAction(
         LOGGER.info("Temperature checks scheduled to run on schedule: ${checkConfiguration.scheduleExpression}")
     }
  companion object {
-     val LOGGER = LoggerFactory.getLogger(RegisterChecksAction::class.java)
+     private val LOGGER = LoggerFactory.getLogger(RegisterChecksAction::class.java)
  }
 }
