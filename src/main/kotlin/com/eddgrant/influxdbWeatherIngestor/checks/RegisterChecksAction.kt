@@ -7,7 +7,6 @@ import jakarta.inject.Singleton
 import org.slf4j.LoggerFactory
 
 @Singleton
-//@RequiresCheckConfiguration
 class RegisterChecksAction(
     private val checkConfiguration: CheckConfiguration,
     private val temperatureEmitter: TemperatureEmitter,
