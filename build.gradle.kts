@@ -73,7 +73,13 @@ allOpen {
     annotations("jakarta.inject.Singleton")
 }
 
-graalvmNative.toolchainDetection.set(true)
+graalvmNative {
+    toolchainDetection = true
+    binaries.all {
+        // Ensure the image is built for maximum machine type compatibility.
+        buildArgs.add("-march=compatibility")
+    }
+}
 micronaut {
     version("$micronautVersion")
     runtime("netty") //TODO: If we remove this will it remove the HTTP server?
@@ -94,6 +100,7 @@ micronaut {
         optimizeClassLoading.set(true)
         deduceEnvironment.set(true)
         optimizeNetty.set(true)
+        replaceLogbackXml.set(true)
     }
 }
 
@@ -127,40 +134,26 @@ tasks.check {
     dependsOn(integrationTestTask)
 }
 
-tasks.named<DockerBuildImage>("dockerBuild") {
-    imageId.set("eddgrant/${project.name}")
-    images.add("${dockerRegistryHost}/eddgrant/${project.name}:${project.version}")
-    images.add("${dockerRegistryHost}/eddgrant/${project.name}:latest")
-    images.add("${dockerRegistryHost}/eddgrant/${project.name}:local")
-    mustRunAfter(tasks.withType(Test::class.java))
+val configureDockerImageNames: (DockerBuildImage) -> Unit = {
+    it.images.add("eddgrant/${project.name}:local")
+    it.images.add("${dockerRegistryHost}/eddgrant/${project.name}:${project.version}")
+    it.images.add("${dockerRegistryHost}/eddgrant/${project.name}:latest")
+    it.mustRunAfter(tasks.withType(Test::class.java))
 }
 
+tasks.named<DockerBuildImage>("dockerBuild", configureDockerImageNames)
+tasks.named<DockerBuildImage>("dockerBuildNative", configureDockerImageNames)
+
 tasks.register<DockerPushImage>("dockerPushVersion") {
-    dependsOn("dockerBuild")
+    dependsOn("dockerBuildNative")
     images.set(listOf(
         "${dockerRegistryHost}/eddgrant/${project.name}:${project.version}",
     ))
 }
 
 tasks.register<DockerPushImage>("dockerPushLatest") {
-    dependsOn("dockerBuild")
+    dependsOn("dockerBuildNative")
     images.set(listOf(
         "${dockerRegistryHost}/eddgrant/${project.name}:latest",
     ))
 }
-
-/*tasks.register<DockerTagImage>("tagPR") {
-    tag.set("${dockerRegistryHost}/eddgrant/${project.name}:${project.pr}")
-}*/
-
-/*tasks.named<DockerBuildImage>("dockerBuildNative") {
-    images.add("eddgrant/${project.name}-native:$project.version")
-    images.add("eddgrant/${project.name}-native:latest")
-}*/
-
-/*tasks.named<DockerBuildImage>("dockerBuildCrac") {
-    images.add("eddgrant/${project.name}-crac:$project.version")
-    images.add("eddgrant/${project.name}-crac:latest")
-}*/
-
-
