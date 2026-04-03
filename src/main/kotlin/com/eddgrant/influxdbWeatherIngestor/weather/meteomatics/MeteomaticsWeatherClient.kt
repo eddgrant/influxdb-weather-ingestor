@@ -10,7 +10,7 @@ import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
 @Singleton
-@Requires(property = "weather.provider", value = "meteomatics", defaultValue = "meteomatics")
+@Requires(property = "weather.provider", value = "meteomatics")
 class MeteomaticsWeatherClient(private val meteomaticsClient: MeteomaticsClient) : WeatherClient {
 
     override fun getTemperatureByDateAndLocation(dateTime: Instant, location: Location): Double {
