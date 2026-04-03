@@ -26,31 +26,23 @@ repositories {
 
 dependencies {
     runtimeOnly("org.yaml:snakeyaml")
+    runtimeOnly("ch.qos.logback:logback-classic")
+    runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     ksp(mn.micronaut.http.validation)
     ksp(mn.micronaut.serde.processor)
+    ksp(mn.micronaut.validation.processor)
+
     implementation(mn.micronaut.serde.jackson)
     implementation(mn.micronaut.http.client)
-    runtimeOnly("ch.qos.logback:logback-classic")
-
     implementation(mn.micronaut.jackson.databind)
     implementation(mn.micronaut.kotlin.runtime)
+    implementation(mn.micronaut.validation)
     implementation("jakarta.annotation:jakarta.annotation-api")
     implementation("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}")
-    runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
-
-    // Replace Jackson with micronaut-serialization
-    annotationProcessor(mn.micronaut.serde.processor)
-    implementation(mn.micronaut.serde.jackson)
-
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1-0.6.x-compat")
     implementation("com.influxdb:influxdb-client-kotlin:7.5.0")
-
-    annotationProcessor(mn.micronaut.validation.processor)
-    implementation(mn.micronaut.validation)
-
-    testImplementation(mn.micronaut.http.client)
 }
 
 application {
