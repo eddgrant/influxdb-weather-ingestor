@@ -10,55 +10,72 @@ import com.influxdb.client.kotlin.InfluxDBClientKotlin
 import io.micronaut.context.annotation.Value
 import io.micronaut.http.HttpStatus
 import jakarta.inject.Singleton
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.reactor.mono
 import org.slf4j.LoggerFactory
+import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlin.time.toJavaInstant
 
-/**
- * Scheduled Task
- */
 @Singleton
 class TemperatureEmitter(
     private val checkConfiguration: CheckConfiguration,
     private val postcodesIoClient: PostcodesIoClient,
     private val weatherService: WeatherService,
     private val influxDBClient: InfluxDBClientKotlin,
-    @param:Value($$"${weather.provider}") private val provider: String
+    @param:Value("\${weather.provider}") private val provider: String
 ) {
-    fun emitTemperature() {
-        val dateTime = Clock.System.now()
 
-        val getLocationHttpResponse = postcodesIoClient.findLocationByPostcode(checkConfiguration.postcode)
-        if(getLocationHttpResponse.status != HttpStatus.OK) {
-            LOGGER.error("Could not determine location from postcode '{}'. Is it a valid postcode?", checkConfiguration.postcode)
-            return
-        }
+    fun getTemperatureData(): Flux<Temperature> {
+        return Flux.interval(checkConfiguration.checkInterval)
+            .concatMap {
+                mono(Dispatchers.IO) {
+                    LOGGER.info("Checking the temperature")
+                    val dateTime = Clock.System.now()
 
-        val location = getLocationHttpResponse.body()!!
-        val temperature = weatherService.getTemperatureByDateAndLocation(
-            dateTime,
-            location
-        )
+                    val response = postcodesIoClient.findLocationByPostcode(checkConfiguration.postcode)
+                    if (response.status != HttpStatus.OK) {
+                        throw RuntimeException("Could not determine location from postcode '${checkConfiguration.postcode}'. Is it a valid postcode?")
+                    }
 
-        val temperatureMeasurement = Temperature(
-            source = checkConfiguration.source,
-            postcode = checkConfiguration.postcode,
-            provider = provider,
-            value = temperature,
-            time = dateTime.toJavaInstant()
-        )
+                    val location = response.body()!!
+                    val temperature = weatherService.getTemperatureByDateAndLocation(dateTime, location)
 
-        runBlocking {
-            influxDBClient.getWriteKotlinApi().writeMeasurement(temperatureMeasurement, WritePrecision.MS)
-        }
-        LOGGER.info("Temperature measurement sent: Postcode: ${checkConfiguration.postcode}, Temperature: $temperature")
-        LOGGER.debug("Measurement data: {}", temperatureMeasurement.toString())
+                    Temperature(
+                        source = checkConfiguration.source,
+                        postcode = checkConfiguration.postcode,
+                        provider = provider,
+                        value = temperature,
+                        time = dateTime.toJavaInstant()
+                    )
+                }
+                .onErrorResume { e ->
+                    LOGGER.error("Temperature check failed. Will retry on next interval.", e)
+                    Mono.empty()
+                }
+            }
+    }
+
+    fun publishTemperature(temperatureData: Flux<Temperature>): Flux<Void> {
+        return temperatureData
+            .concatMap { measurement ->
+                mono(Dispatchers.IO) {
+                    influxDBClient.getWriteKotlinApi()
+                        .writeMeasurement(measurement, WritePrecision.MS)
+                    LOGGER.info("Temperature measurement sent: Postcode: ${measurement.postcode}, Temperature: ${measurement.value}")
+                    LOGGER.debug("Measurement data: {}", measurement)
+                }
+                .then(Mono.empty<Void>())
+                .onErrorResume { e ->
+                    LOGGER.error("Failed to write temperature measurement to InfluxDB. Will retry on next interval.", e)
+                    Mono.empty()
+                }
+            }
     }
 
     companion object {
         private val LOGGER = LoggerFactory.getLogger(TemperatureEmitter::class.java)
     }
-
 }
