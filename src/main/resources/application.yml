@@ -32,5 +32,10 @@ logger:
     com:
       eddgrant: INFO
 
+endpoints:
+  health:
+    enabled: true
+    sensitive: false
+
 weather:
   provider: weatherapi.com
