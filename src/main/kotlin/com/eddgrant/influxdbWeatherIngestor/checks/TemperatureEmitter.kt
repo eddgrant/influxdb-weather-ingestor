@@ -10,7 +10,6 @@ import com.influxdb.client.kotlin.InfluxDBClientKotlin
 import io.micronaut.context.annotation.Value
 import io.micronaut.http.HttpStatus
 import jakarta.inject.Singleton
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 import kotlin.time.Clock
@@ -53,22 +52,10 @@ class TemperatureEmitter(
         )
 
         runBlocking {
-            val job = launch {
-                try {
-                    influxDBClient.getWriteKotlinApi().writeMeasurement(temperatureMeasurement, WritePrecision.MS)
-                } catch (e: Exception) {
-                    LOGGER.error(e.message)
-                    /*
-                     * Propagate the exception back to the caller (who is outside the coroutine scope)
-                     * so they can decide what they want to do.
-                     */
-                    throw e
-                }
-            }
-            job.join()
-            LOGGER.info("Temperature measurement sent: Postcode: ${checkConfiguration.postcode}, Temperature: $temperature")
-            LOGGER.debug("Measurement data: {}", temperatureMeasurement.toString())
+            influxDBClient.getWriteKotlinApi().writeMeasurement(temperatureMeasurement, WritePrecision.MS)
         }
+        LOGGER.info("Temperature measurement sent: Postcode: ${checkConfiguration.postcode}, Temperature: $temperature")
+        LOGGER.debug("Measurement data: {}", temperatureMeasurement.toString())
     }
 
     companion object {
