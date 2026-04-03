@@ -1,22 +1,40 @@
 package com.eddgrant
 
-import com.eddgrant.influxdbWeatherIngestor.checks.RegisterChecksAction
-import io.micronaut.context.event.ApplicationEventListener
+import com.eddgrant.influxdbWeatherIngestor.checks.TemperatureEmitter
+import io.micronaut.context.annotation.Context
+import io.micronaut.context.annotation.Requires
 import io.micronaut.runtime.Micronaut.run
-import io.micronaut.runtime.server.event.ServerStartupEvent
+import jakarta.annotation.PostConstruct
+import jakarta.annotation.PreDestroy
 import jakarta.inject.Singleton
 import org.slf4j.LoggerFactory
+import reactor.core.Disposable
 
 @Singleton
+@Context
+@Requires(notEnv = ["test"])
 class InfluxDBWeatherIngestor(
-	private val registerChecksAction: RegisterChecksAction
-) : ApplicationEventListener<ServerStartupEvent> {
-	override fun onApplicationEvent(event: ServerStartupEvent?) {
-		try {
-			registerChecksAction.register()
-		}
-		catch (interruptedException: InterruptedException) {
-			LOGGER.error(interruptedException.message)
+	private val temperatureEmitter: TemperatureEmitter
+) {
+	private lateinit var disposable: Disposable
+
+	@PostConstruct
+	fun start() {
+		LOGGER.info("Starting temperature monitoring subscription.")
+		disposable = temperatureEmitter.publishTemperature(
+			temperatureEmitter.getTemperatureData()
+		).subscribe()
+		LOGGER.info("Temperature monitoring subscription created.")
+	}
+
+	fun isSubscriptionActive(): Boolean =
+		this::disposable.isInitialized && !disposable.isDisposed
+
+	@PreDestroy
+	fun stop() {
+		LOGGER.info("Shutdown signal received: Cancelling temperature monitoring subscription.")
+		if (isSubscriptionActive()) {
+			disposable.dispose()
 		}
 	}
 
@@ -28,4 +46,3 @@ class InfluxDBWeatherIngestor(
 fun main(args: Array<String>) {
 	run(InfluxDBWeatherIngestor::class.java, *args)
 }
-
