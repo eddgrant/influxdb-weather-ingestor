@@ -11,19 +11,15 @@ influxdb:
   token: my-very-secure-influxdb-token
   url: http://influxdb:8086?connectTimeout=5S&readTimeout=5S&writeTimeout=5S
 
-meteomatics:
-  username: edd.grant
-  password: my-very-secure-influxdb-token
+weatherapi:
+  api-key: test-api-key
 
 weather:
-  provider: meteomatics
+  provider: weatherapi.com
 
 micronaut:
   http:
     services:
-      meteomatics:
-        urls:
-          - "https://api.meteomatics.com"
       weatherapi:
         urls:
           - "https://api.weatherapi.com"
