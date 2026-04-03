@@ -1,0 +1,8 @@
+[
+  {
+    "name": "com.eddgrant.influxdbWeatherIngestor.persistence.influxdb.Temperature",
+    "allDeclaredConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  }
+]
