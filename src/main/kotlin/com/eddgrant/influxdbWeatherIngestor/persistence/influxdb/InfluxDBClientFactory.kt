@@ -13,7 +13,7 @@ class InfluxDBClientFactory(
     private val influxDBConfiguration: InfluxDBConfiguration
 ) {
 
-    @Bean
+    @Bean(preDestroy = "close")
     fun influxDBClient() : InfluxDBClientKotlin {
         val influxDBClientOptions = InfluxDBClientOptions
             .builder()
