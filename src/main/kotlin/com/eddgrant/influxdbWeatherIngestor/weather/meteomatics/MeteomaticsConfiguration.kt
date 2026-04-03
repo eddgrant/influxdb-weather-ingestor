@@ -5,7 +5,7 @@ import io.micronaut.context.annotation.Requires
 import jakarta.validation.constraints.NotBlank
 
 @ConfigurationProperties("meteomatics")
-@Requires(property = "weather.provider", value = "meteomatics", defaultValue = "meteomatics")
+@Requires(property = "weather.provider", value = "meteomatics")
 class MeteomaticsConfiguration {
 
     @NotBlank
