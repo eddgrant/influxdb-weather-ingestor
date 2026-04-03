@@ -38,6 +38,7 @@ dependencies {
     implementation(mn.micronaut.jackson.databind)
     implementation(mn.micronaut.kotlin.runtime)
     implementation(mn.micronaut.validation)
+    implementation("io.micronaut:micronaut-management")
     implementation("jakarta.annotation:jakarta.annotation-api")
     implementation("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1-0.6.x-compat")
