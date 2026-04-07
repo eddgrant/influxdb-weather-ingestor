@@ -125,11 +125,11 @@ influxdb-weather-ingestor should start and begin to log its output to the consol
 
 By default influxdb-weather-ingestor will check the temperature every minute. 
 
-This can be altered by setting the `CHECKS_SCHEDULE_EXPRESSION` environment variable e.g.
+This can be altered by setting the `CHECKS_CHECK_INTERVAL` environment variable to a duration value e.g.
 
 ```shell
-CHECKS_SCHEDULE_EXPRESSION=*/10 * * * *`
-````
+CHECKS_CHECK_INTERVAL=10m
+```
 
 Each time a temperature measurement is sent to InfluxDB an `INFO` level log entry is written e.g.
 
