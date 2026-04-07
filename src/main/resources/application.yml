@@ -19,6 +19,10 @@ micronaut:
   default:
     allocator:
       max-order: 3
+  caches:
+    postcodes:
+      maximum-size: 100
+      expire-after-write: 24h
 
 logger:
   levels:
