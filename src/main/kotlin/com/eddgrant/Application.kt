@@ -23,7 +23,14 @@ class InfluxDBWeatherIngestor(
 		LOGGER.info("Starting temperature monitoring subscription.")
 		disposable = temperatureEmitter.publishTemperature(
 			temperatureEmitter.getTemperatureData()
-		).subscribe()
+		).doOnError { error ->
+			LOGGER.error("Temperature monitoring pipeline failed unexpectedly. Re-subscribing.", error)
+		}.retry()
+		.subscribe(
+			{},
+			{ error -> LOGGER.error("Temperature monitoring pipeline terminated.", error) },
+			{ LOGGER.info("Temperature monitoring pipeline completed.") }
+		)
 		LOGGER.info("Temperature monitoring subscription created.")
 	}
 
