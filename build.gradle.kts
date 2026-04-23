@@ -44,7 +44,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1-0.6.x-compat")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
     implementation("io.micronaut.reactor:micronaut-reactor")
-    implementation("com.influxdb:influxdb-client-kotlin:7.5.0")
+    implementation("com.influxdb:influxdb-client-kotlin:8.0.0")
     implementation("io.micronaut.cache:micronaut-cache-caffeine")
 
     testImplementation("io.projectreactor:reactor-test")
