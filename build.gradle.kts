@@ -41,7 +41,7 @@ dependencies {
     implementation("io.micronaut:micronaut-management")
     implementation("jakarta.annotation:jakarta.annotation-api")
     implementation("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1-0.6.x-compat")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.8.0-0.6.x-compat")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
     implementation("io.micronaut.reactor:micronaut-reactor")
     implementation("com.influxdb:influxdb-client-kotlin:8.0.0")
